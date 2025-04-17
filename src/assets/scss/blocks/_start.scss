@@ -1,0 +1,95 @@
+@use 'blocks/vars'as *;
+
+.vertical .start {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    & .flex-column {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        height: 100%;
+    }
+
+    & .start_logo,
+    & .start_logo_game,
+    & .start_bottom {
+        margin-left: auto;
+        margin-right: auto;
+        max-width: max-content;
+    }
+
+    & .start_logo img {
+        width: calc(214 / $mobilever * 1vw);
+        height: calc(60 / $mobilever * 1vw);
+    }
+    & .start_logo{
+        margin-top: calc(196 / $mobilever * 1vw);
+    }
+
+    & .start_logo_game{
+        margin-top: calc(42 / $mobilever * 1vw);
+        margin-bottom: calc(100 / $mobilever * 1vw);
+    }
+
+    & .start_logo_game img{
+        width: calc(376 / $mobilever * 1vw);
+        height: calc(160 / $mobilever * 1vw);
+    }
+    & .start_bottom  img{
+        width: calc(512 / $mobilever * 1vw);
+        height: calc(364 / $mobilever * 1vw);
+    }
+    & .start_bottom{
+        // margin-top: calc(257 / $mobilever * 1vw);
+        margin-top: auto;
+    }
+}
+
+.horizontal .start {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    & .flex-column {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        height: 100%;
+    }
+
+    & .start_logo,
+    & .start_logo_game,
+    & .start_bottom {
+        margin-left: auto;
+        margin-right: auto;
+        max-width: max-content;
+    }
+
+    & .start_logo img {
+        width: calc(214 / $mobilehor * 1vh);
+        height: calc(60 / $mobilehor * 1vh);
+    }
+    & .start_logo{
+        margin-top: calc(196 / $mobilehor * 1vh);
+    }
+
+    & .start_logo_game{
+        margin-top: calc(42 / $mobilehor * 1vh);
+        margin-bottom: calc(100 / $mobilehor * 1vh);
+    }
+
+    & .start_logo_game img{
+        width: calc(376 / $mobilehor * 1vh);
+        height: calc(160 / $mobilehor * 1vh);
+    }
+    & .start_bottom  img{
+        width: calc(512 / $mobilehor * 1vh);
+        height: calc(364 / $mobilehor * 1vh);
+    }
+    & .start_bottom{
+        margin-top: auto;
+        // margin-top: calc(257 / $mobilehor * 1vh);
+    }
+}

@@ -1,0 +1,35 @@
+// @use  'vendor/reset';
+@use 'blocks/vars' as *;
+// @use  "./vendor/animate";
+@use 'fonts' as *;
+@use 'settings' as *;
+@use 'blocks/container' as *;
+@use 'blocks/page' as *;
+@use 'blocks/header' as *;
+@use 'blocks/footer' as *;
+@use 'blocks/start' as *;
+
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  font-family: var(--font-family);
+  //  background-color: var(--accent-color);
+}
+
+.main {
+  height: 100%;
+  flex: 1 0 auto;
+}
+
+.vertical .section {
+  width: calc(538 / $mobilever * 1vw);
+  height: 1080px;
+  margin: 0 auto;
+}
+.horizontal .section {
+  width: calc(538 / $mobilehor * 1vh);
+  height: 1080px;
+  margin: 0 auto;
+}

@@ -1,0 +1,40 @@
+*,
+*::before,
+*::after{
+    box-sizing: border-box;
+}
+img {
+    height: auto;
+    max-width: 100%;
+    object-fit: cover;
+  }
+a {
+    text-decoration: none;
+    color: inherit;
+  }
+  .btn-reset {
+    border: none;
+    padding: 0;
+    background-color: transparent;
+    cursor: pointer;
+  }
+  .list-reset {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  // .background-center{
+  //   background-position: center;
+  //   background-repeat: no-repeat;
+  //   background-size: cover;
+  // }
+
+  .h-reset{
+    margin: 0;
+    font-size: inherit;
+  }
+
+  .flex{
+    display: flex;
+    align-items: center;
+  }

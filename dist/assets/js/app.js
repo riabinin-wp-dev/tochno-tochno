@@ -1,0 +1,1 @@
+!function(){"use strict";function d(){1.6<window.innerHeight/window.innerWidth?(document.body.classList.add("vertical"),document.body.classList.remove("horizontal")):(document.body.classList.add("horizontal"),document.body.classList.remove("vertical"))}window.addEventListener("load",d),window.addEventListener("resize",d)}();

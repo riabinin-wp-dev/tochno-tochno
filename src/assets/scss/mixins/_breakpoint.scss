@@ -1,0 +1,97 @@
+/* stylelint-disable */
+
+@mixin for-desktop {
+  @media (max-width: (1150px)) {
+    @content;
+  }
+}
+@mixin maps {
+  @media (max-width: (1250px)) {
+    @content;
+  }
+}
+
+@mixin big-desktop {
+  @media (max-width: (1440px)) {
+    @content;
+  }
+}
+@mixin maps-object {
+  @media (max-width: (1350px)) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @media (max-width: (992px)) {
+    @content;
+  }
+}
+
+@mixin slider {
+  @media (max-width: (900px)) {
+    @content;
+  }
+}
+
+@mixin small-tablet {
+  @media (max-width: (768px)) {
+    @content;
+  }
+}
+@mixin burger-header {
+  @media (max-width: (650px)) {
+    @content;
+  }
+}
+
+@mixin mobile {
+  @media (max-width: (576px)) {
+    @content;
+  }
+}
+@mixin micro-mobile {
+  @media (max-width: (500px)) {
+    @content;
+  }
+}
+@mixin map485 {
+  @media (max-width: (485px)) {
+    @content;
+  }
+}
+@mixin map465 {
+  @media (max-width: (465px)) {
+    @content;
+  }
+}
+@mixin map440 {
+  @media (max-width: (440px)) {
+    @content;
+  }
+}
+@mixin map410 {
+  @media (max-width: (410px)) {
+    @content;
+  }
+}
+@mixin map395 {
+  @media (max-width: (395px)) {
+    @content;
+  }
+}
+@mixin map375 {
+  @media (max-width: (375px)) {
+    @content;
+  }
+}
+@mixin map355 {
+  @media (max-width: (355px)) {
+    @content;
+  }
+}
+@mixin small-mobile {
+  @media (max-width: (430px)) {
+    @content;
+  }
+}

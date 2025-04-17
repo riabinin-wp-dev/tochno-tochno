@@ -1,0 +1,20 @@
+
+ :root {
+    // base
+    --font-family: "SB Sans Interface Bold", sans-serif;
+    --content-width: 1920px;
+    --content-fluid-width: 1690px;
+    --container-offset: 30px;
+    --container-width: calc(var(--content-width) + (var(--container-offset) * 2));
+    --container-fluid-width: calc(var(--content-fluid-width) + (var(--container-offset) * 2));
+  
+    // colors
+    --light-color: #fff;
+    --accent-color: #D52027;
+    --dark-color:#141024;
+    --text-colot: rgba(#141024, 0.7);
+  
+  }
+
+  $mobilever: 5.38;
+  $mobilehor : 10.80
