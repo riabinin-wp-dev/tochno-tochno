@@ -1,7 +1,10 @@
 
  :root {
     // base
-    --font-family: "SB Sans Interface Bold", sans-serif;
+    --interface-bold: "SB Sans Interface Bold", sans-serif;
+    --interface-semibold: "SB Sans Interface Semibold", sans-serif;
+    --sans-semibold: "SB Sans Text Semibold"; 
+    --sans-regular: "SB Sans Text"; 
     --content-width: 1920px;
     --content-fluid-width: 1690px;
     --container-offset: 30px;

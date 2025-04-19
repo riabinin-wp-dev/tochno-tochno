@@ -301,7 +301,7 @@ gulp.task('default',
       'css',                 // CSS
       'js',                  // JS
       'fonts',               // Шрифты
-      'sprite',              // Спрайты
+    //   'sprite',              // Спрайты
       gulp.parallel(         // Параллельно
         'imagesOptimize',     // Оптимизация изображений
         'imagesWebp',         // Конвертация в WebP
@@ -314,7 +314,7 @@ gulp.task('default',
         'imagesOptimizeWatch',            
         'imagesWebpWatch',            
         'imagesAvifWatch',            
-        'spriteWatch',            
+        // 'spriteWatch',            
         'fontsWatch',            
         'serve'              
       )

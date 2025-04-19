@@ -5,6 +5,9 @@
     <meta charset="UTF-8">
     <link href="https://db.onlinewebfonts.com/c/76d269035a3e23e40f0bba43207b562a?family=SB+Sans+Interface+Bold" rel="stylesheet" type="text/css"/>
     <link href="https://db.onlinewebfonts.com/c/e43e38a2228e489498744966f4dbacbe?family=SB+Sans+Interface+Semibold" rel="stylesheet">
+    <link href="https://db.onlinewebfonts.com/c/c68e21ad1a10803b1ef491fd0392b067?family=SB+Sans+Text" rel="stylesheet"> 
+    <link href="https://db.onlinewebfonts.com/c/cf8ad58acbe94cc96c1196fa2d336b14?family=SB+Sans+Text+Semibold" rel="stylesheet"> 
+    
     <link rel="stylesheet" href="assets/css/style.css">
     
     <!-- Useful meta tags -->
@@ -26,23 +29,97 @@
             
             
             
-            <!-- <div id="timer-display">0:00</div>
+            <!-- <div id="backtimer-display">0:00</div>
             <button id="start-button">Старт</button>
             <button id="stop-button">Стоп</button>
             <button id="reset-button">Сброс</button> -->
-            <div id="start" class="section start" style="background-image: url(./assets/images/Color=Default.png);">
+            <div id="start" class="section start none" style="background-image: url(./assets/images/Color=Default.png);">
                 <div class="flex-column">
                     <div class="start_logo">
-                        <img src="./assets/images/logo.svg" alt="logo 2gis" width="214" height="60">
+                        <img src="./assets/images/svg/logo.svg" alt="logo 2gis" width="214" height="60">
                     </div>
                     <div class="start_logo_game">
-                        <img src="./assets/images/Logo-game.svg" alt="logo game" width="376" height="160">
+                        <img src="./assets/images/svg/Logo-game.svg" alt="logo game" width="376" height="160">
                     </div>
                     <div class="start_bottom">
                         <img src="./assets/images/agutin.png" alt="agutin" width="532" height="364">
                     </div>
                 </div>
             </div>
+            <section class="section hello none" style="background-image: url(./assets/images/Color=Default.png);">
+                <div class="flex-column">
+                    <div class="container">
+                        <h1 class="h-reset">Привет, <span>Максим</span>!</h1>
+                        <p>Давай узнаем, <br> что ты знаешь о 2ГИС.</p>
+                        <p>Останови таймер в указанное время, нажав на кнопку, и получи гуськоины!</p>
+                        <p>Будь внимателен, быстр и ловок! У тебя <span>3 раунда</span> по <span>20 секунд.</span></p>
+                        <p class="warning">Жми кнопку, если готов</p>
+                    </div>
+                </div>
+                <div class="start_bottom">
+                    <img src="./assets/images/agutin.png" alt="agutin" width="532" height="364">
+                </div>
+            </section>
+            
+            <section class="backtimer section none" style="background-image: url(./assets/images/Color=Default.png);">
+                <div class="flex-column">
+                    <div class="start_logo_game backtimer_logo">
+                        <img src="./assets/images/svg/Logo-game.svg" alt="logo game" width="376" height="160">
+                    </div>
+                    <div class="backtimer_count">3</div>
+                    <!-- <div class="backtimer_text">Старт</div> -->
+                </div>
+            </section>
+            
+            <section class="section round default">
+                <div class="start_logo_game backtimer_logo">
+                    <img src="./assets/images/svg/Logo-game.svg" alt="logo game" width="376" height="160">
+                </div>
+                <div class="round_status">Раунд <span>1</span> из 3</div>
+                <!-- <div class="round_target winner">ПОЙМАЙ 149 000</div> -->
+                <div class="round_target winner">Победа! <br> Ты заработал</div>
+                <!-- <div class="round_container">
+                    <div class="digit-container">1
+                        <div class="shadow grey"></div>
+                    </div>
+                    <div class="digit-container">4
+                        <div class="shadow grey"></div>
+                    </div>
+                    <div class="digit-container">8
+                        <div class="shadow grey"></div>
+                    </div>
+                    <div class="digit-container">8
+                        <div class="shadow red"></div>
+                    </div>
+                    <div class="digit-container">1
+                        <div class="shadow green"></div>
+                    </div>
+                    <div class="digit-container">5
+                        <div class="shadow red"></div>
+                    </div>
+                </div> -->
+                <div class="round_coin_info">
+                    300
+                    <img src="./assets/images/svg/Coin.svg" alt="coin">
+                </div>
+                <div class="round_reult_text">
+                    <p>Теперь ты знаешь о компании много интересного. Ура!</p>
+                    <p>Приходи позже и сыграй еще раз!</p>
+                </div>
+                <!-- <div class="round_result">
+                    Следующий раунд через <span>3</span>
+                </div> -->
+                <!-- <div class="round_info">Самый просматриваемый пост на Хабре Service Workers. Инструкция по применению 149 000 k</div> -->
+                <div class="round_finish">
+                    <div class="imf-wrap">
+                        <img src="./assets/images/code.png" alt="shortcode">
+                    </div>
+                    <div class="flex-column">
+                        <p>Телеграм-бот <br> от 2ГИС</p>
+                        <p>Твой баланс <br> гискоинов ТУТ</p>
+                    </div>
+                </div>
+            </section>
         </main>
 
     </div>

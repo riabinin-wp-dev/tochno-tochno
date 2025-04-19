@@ -1,0 +1,85 @@
+@use 'blocks/vars' as *;
+
+.vertical .backtimer {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: calc(64 / $mobilever * 1vw) 0;
+
+
+    & .start_logo_game {
+        margin-left: auto;
+        margin-right: auto;
+        max-width: max-content;
+    }
+
+    & .start_logo img {
+        width: calc(180 / $mobilever * 1vw);
+        height: calc(80 / $mobilever * 1vw);
+    }
+
+    & .backtimer_count {
+        font-family: var(--interface-bold);
+        font-weight: 700;
+        font-size: calc(384 / $mobilever * 1vw);
+        letter-spacing: -0.02em;
+        text-align: center;
+        color: #141414;
+        margin-top: calc(39 / $mobilever * 1vw);
+    }
+
+    & .backtimer_text{
+        font-family: var(--interface-bold);
+        font-weight: 700;
+        font-size: calc(160 / $mobilever * 1vw);
+        letter-spacing: -0.02em;
+        text-align: center;
+        color: #141414;
+        margin-top: calc(170 / $mobilever * 1vw);
+    }
+}
+
+.horizontal .backtimer {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: calc(64 / $mobilehor * 1vh) 0;
+
+
+    & .start_logo_game {
+        margin-left: auto;
+        margin-right: auto;
+        max-width: max-content;
+    }
+
+    & .start_logo img {
+        width: calc(180 / $mobilehor * 1vh);
+        height: calc(80 / $mobilehor * 1vh);
+    }
+
+    & .backtimer_count {
+        font-family: var(--interface-bold);
+        font-weight: 700;
+        font-size: calc(384 / $mobilehor * 1vh);
+        letter-spacing: -0.02em;
+        text-align: center;
+        color: #141414;
+        margin-top: calc(39 / $mobilehor * 1vh);
+    }
+
+    & .backtimer_text{
+        font-family: var(--interface-bold);
+        font-weight: 700;
+        font-size: calc(160 / $mobilehor * 1vh);
+        letter-spacing: -0.02em;
+        text-align: center;
+        color: #141414;
+        margin-top: calc(170 / $mobilehor * 1vh);
+    }
+}
