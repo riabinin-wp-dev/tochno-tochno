@@ -8,7 +8,7 @@ title: Документ
 <button id="start-button">Старт</button>
 <button id="stop-button">Стоп</button>
 <button id="reset-button">Сброс</button> -->
-<div id="start" class="section start none" style="background-image: url(./assets/images/Color=Default.png);">
+<div id="start" class="section start default active">
     <div class="flex-column">
         <div class="start_logo">
             <img src="./assets/images/svg/logo.svg" alt="logo 2gis" width="214" height="60">
@@ -21,10 +21,10 @@ title: Документ
         </div>
     </div>
 </div>
-<section class="section hello none" style="background-image: url(./assets/images/Color=Default.png);">
+<section id="hello" class="section hello none default">
     <div class="flex-column">
         <div class="container">
-            <h1 class="h-reset">Привет, <span>Максим</span>!</h1>
+            <h1 class="h-reset">Привет, <span data-name>Максим</span>!</h1>
             <p>Давай узнаем, <br> что ты знаешь о 2ГИС.</p>
             <p>Останови таймер в указанное время, нажав на кнопку, и получи гуськоины!</p>
             <p>Будь внимателен, быстр и ловок! У тебя <span>3 раунда</span> по <span>20 секунд.</span></p>
@@ -36,25 +36,31 @@ title: Документ
     </div>
 </section>
 
-<section class="backtimer section none" style="background-image: url(./assets/images/Color=Default.png);">
+<section id="backtimer" class="backtimer section none default">
     <div class="flex-column">
         <div class="start_logo_game backtimer_logo">
             <img src="./assets/images/svg/Logo-game.svg" alt="logo game" width="376" height="160">
         </div>
-        <div class="backtimer_count">3</div>
-        <!-- <div class="backtimer_text">Старт</div> -->
+        <div class="backtimer_count" data-count>3</div>
+        <div class="backtimer_text" data-text>
+            <span>С</span>
+            <span>т</span>
+            <span>а</span>
+            <span>р</span>
+            <span>т</span>
+        </div>
     </div>
 </section>
 
-<section class="section round default">
+<section id="rounds" class="section round default none">
     <div class="start_logo_game backtimer_logo">
         <img src="./assets/images/svg/Logo-game.svg" alt="logo game" width="376" height="160">
     </div>
-    <div class="round_status">Раунд <span>1</span> из 3</div>
-    <!-- <div class="round_target winner">ПОЙМАЙ 149 000</div> -->
-    <div class="round_target winner">Победа! <br> Ты заработал</div>
-    <!-- <div class="round_container">
-        <div class="digit-container">1
+    <div class="round_status" style="display: none;">Раунд <span>1</span> из 3</div>
+    <div class="round_target" style="display: none;">ПОЙМАЙ 149 000</div>
+    <div class="round_target winner" style="display: none;">Победа! <br> Ты заработал</div>
+    <div class="round_container" style="display: none;">
+        <!-- <div class="digit-container">1
             <div class="shadow grey"></div>
         </div>
         <div class="digit-container">4
@@ -71,21 +77,21 @@ title: Документ
         </div>
         <div class="digit-container">5
             <div class="shadow red"></div>
-        </div>
-    </div> -->
-    <div class="round_coin_info">
+        </div> -->
+    </div>
+    <div class="round_coin_info" style="display: none;">
         300
         <img src="./assets/images/svg/Coin.svg" alt="coin">
     </div>
-    <div class="round_reult_text">
+    <div class="round_reult_text" style="display: none;">
         <p>Теперь ты знаешь о компании много интересного. Ура!</p>
         <p>Приходи позже и сыграй еще раз!</p>
     </div>
-    <!-- <div class="round_result">
+    <div class="round_result" style="display: none;">
         Следующий раунд через <span>3</span>
-    </div> -->
-    <!-- <div class="round_info">Самый просматриваемый пост на Хабре Service Workers. Инструкция по применению 149 000 k</div> -->
-    <div class="round_finish">
+    </div>
+    <div class="round_info" style="display: none;">Самый просматриваемый пост на Хабре Service Workers. Инструкция по применению 149 000 k</div>
+    <div class="round_finish" style="display: none;">
         <div class="imf-wrap">
             <img src="./assets/images/code.png" alt="shortcode">
         </div>

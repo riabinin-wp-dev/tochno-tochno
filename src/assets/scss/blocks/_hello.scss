@@ -55,7 +55,9 @@
     }
     & .start_bottom{
         // margin-top: calc(257 / $mobilever * 1vw);
-        // margin-top: auto;
+        display: flex;
+        justify-content: center;
+        margin-top: auto;
     }
 }
 
@@ -113,7 +115,9 @@
         height: calc(364 / $mobilehor * 1vh);
     }
     & .start_bottom{
-        // margin-top: auto;
+        margin-top: auto;
+        display: flex;
+        justify-content: center;
         // margin-top: calc(257 / $mobilehor * 1vh);
     }
 }

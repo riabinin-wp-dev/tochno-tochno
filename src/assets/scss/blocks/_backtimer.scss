@@ -1,5 +1,54 @@
 @use 'blocks/vars' as *;
 
+.backtimer_text {
+    opacity: 0;
+    transition: all 0.5s linear;
+    display: flex;
+    justify-content: center;
+
+    &.hidden {
+        margin-top: -100% !important;
+    }
+
+    &.active {
+        opacity: 1;
+    }
+}
+
+.backtimer_count {
+    transition: all 0.5s linear;
+
+    &.hide {
+        opacity: 0;
+    }
+
+    &.slide-up{
+        margin-top: -100% !important;
+    }
+}
+
+.disperse {
+    opacity: 1;
+    transition: opacity 0.3s;
+
+    & span{
+        transition: transform 0.8s ease, opacity 0.8s ease;
+        transform: translate(0, 0) rotate(0deg);
+    }
+}
+
+.disperse.animate span {
+    animation: disperseRandom 1.5s ease forwards;
+  animation-delay: calc(var(--i) * 40ms);
+}
+
+@keyframes disperseRandom {
+    to {
+      transform: translate(var(--x), var(--y)) rotate(var(--r));
+      opacity: 0;
+    }
+  }
+
 .vertical .backtimer {
     background-size: cover;
     background-position: center;
@@ -31,7 +80,7 @@
         margin-top: calc(39 / $mobilever * 1vw);
     }
 
-    & .backtimer_text{
+    & .backtimer_text {
         font-family: var(--interface-bold);
         font-weight: 700;
         font-size: calc(160 / $mobilever * 1vw);
@@ -73,7 +122,7 @@
         margin-top: calc(39 / $mobilehor * 1vh);
     }
 
-    & .backtimer_text{
+    & .backtimer_text {
         font-family: var(--interface-bold);
         font-weight: 700;
         font-size: calc(160 / $mobilehor * 1vh);
