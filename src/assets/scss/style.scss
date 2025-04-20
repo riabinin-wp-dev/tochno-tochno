@@ -60,3 +60,73 @@ body {
 .none{
   display: none !important;
 }
+/* Общая обёртка */
+.slide-element {
+  transition: margin-top 0.3s ease, opacity 0.3s ease;
+  margin-top: 0;
+  opacity: 1;
+}
+
+/* Скрытие */
+.slide-hidden {
+  margin-top: -100%;
+  opacity: 0;
+  pointer-events: none;
+}
+
+
+#coin-fireworks {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 9999;
+}
+.coin-piece {
+  position: absolute;
+  animation: fly 2s ease-out forwards;
+  will-change: transform, opacity;
+}
+
+.coin-piece.coin-fall {
+  animation: fall 1.8s ease-in forwards;
+}
+
+@keyframes fly {
+  0% {
+    transform: translate(0, 0) scale(1) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--x), var(--y)) scale(0.5) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+@keyframes fall {
+  0% {
+    transform: translate(0, 0) scale(1) rotate(0deg);
+    opacity: 1;
+  }
+  80% {
+    transform: translate(var(--x), var(--y)) scale(1) rotate(360deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--x), calc(var(--y) + 100px)) scale(1) rotate(360deg);
+    opacity: 1;
+  }
+}
+
+
+.vertical .coin-piece{
+  width: calc(80 / $mobilever * 1vw);
+  height: calc(80 / $mobilever * 1vw);
+}
+.horizontal .coin-piece{
+  width: calc(80 / $mobilehor * 1vh);
+  height: calc(80 / $mobilehor * 1vh);
+}

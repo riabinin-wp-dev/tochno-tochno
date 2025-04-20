@@ -11,7 +11,12 @@
 .wrong {
     background-image: url('../images/Color=Red.png');
 }
-
+.wrong .round_result span{
+    color: red !important;
+}
+.round{
+    transition: all 0.3s linear;
+}
 
 .vertical .round {
     padding: calc(64 / $mobilever * 1vw) calc(48 / $mobilever * 1vw);

@@ -4,12 +4,14 @@ class Player {
     constructor() {
         this.token = userData.token;
         this.name = userData.name;
-        this.scope = 0;
+        this.answers = [];
+        this.scope = 50;
     }
 
     saveResult(result) {
         this.scope += result.points;
-        this.answers.push(result);
+        this.answers.push(result.points);
+        console.log('данные сохранены' + this.scope)
     }
 
     getScore() {

@@ -2,6 +2,7 @@
  * Менеджер управлеия игры
  */
 
+import calculateCurrent from "./calculateCurrent.js";
 import DataManager from "./dataManager.js";
 import Player from "./player.js";
 import UIController from "./UIController.js";
@@ -52,37 +53,51 @@ class GameManager {
      * @returns 
      */
     async startNextRound() {
+        await this.ui.prepareSectionForRound();
         const question = await this.data.getRandomQuestion();
-
         if (!question) {
-            //показ результатов
-            this.ui.showEnd();
+            alert('вопрос отсутствует');
             return;
         }
 
         this.currentQuestion = structuredClone(question);
         this.round++;
-        this.ui.showRound(this.round, question.counter, question.fact);
 
+        this.ui.showRound(this.round, question.counter, question.fact);
         this.counterValues = question.counter;
+
         this.startCounter();
 
-        this.ui.waitForClick().then(() => {
-            this.stopCounter();
-        });
+        // Ожидаем клик, но с таймаутом
+        const timeout = 30000; // 30 сек
+        const clickPromise = this.ui.waitForClick();
+        const timeoutPromise = new Promise(resolve => setTimeout(() => resolve('timeout'), timeout));
+
+        const result = await Promise.race([clickPromise, timeoutPromise]);
+
+        this.stopCounter();
+
+        if (result === 'timeout') {
+            console.warn('⏰ Время ожидания истекло');
+            this.handleFail(true); // true —  таймаут
+        } else {
+            const isCorrect = this.checkText();
+            isCorrect ? this.handleSuccess() : this.handleFail(false);
+        }
     }
+
 
     startCounter() {
         this.started = true;
         this.doCycle();
     }
-    stopCounter() {
+    async stopCounter() {
         this.started = false;
 
         const isCorrect = this.checkText();
 
         const result = {
-            points: isCorrect ? 350 : 50, // 50 по умолчанию + 300 при попадании
+            points: isCorrect ? 300 : 0, 
             success: isCorrect,
             round: this.round
         };
@@ -92,10 +107,10 @@ class GameManager {
 
         if (isCorrect) {
             this.failedAttempts = 0;
-            this.ui.showSuccess(result);
+            await this.ui.showSuccess(result);
         } else {
             this.failedAttempts++;
-            this.ui.showFail(result);
+            await this.ui.showFail(result);
         }
 
         if (this.failedAttempts >= this.maxFails) {
@@ -103,8 +118,48 @@ class GameManager {
             return;
         }
 
-        setTimeout(() => this.startNextRound(), 2000);
     }
+
+    async handleSuccess() {
+        const result = {
+            points: 300,
+            success: true,
+            round: this.round
+        };
+
+        this.failedAttempts = 0;
+        await this.ui.showSuccess(result);
+
+
+        if(this.round >= this.maxRounds){
+            this.ui.showEnd(this.player.getScore());
+        }else{
+            this.startNextRound();
+        }
+    }
+
+   async handleFail(isTimeout = false) {
+        const result = {
+            points: 0,
+            success: false,
+            round: this.round,
+            timeout: isTimeout
+        };
+
+        await this.ui.showFail(result);
+
+        this.ui.prepareSectionForRound();
+        if (this.failedAttempts >= this.maxFails) {
+            this.ui.showTooManyFails();
+            return;
+        }
+        if(this.round >= this.maxRounds){
+            this.ui.showEnd(this.player.getScore());
+        }else{
+            this.startNextRound();
+        }
+    }
+
 
     doCycle() {
         if (!this.started) return;

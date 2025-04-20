@@ -6,6 +6,39 @@ class UIController {
         this.roundTarget = this.roundEl.querySelector('.round_target');
         this.counterContainer = this.roundEl.querySelector('.round_container');
         this.roundInfo = this.roundEl.querySelector('.round_info');
+        this.roundCoinInfo = this.roundEl.querySelector('.round_coin_info');
+        this.roundResult = this.roundEl.querySelector('.round_result');
+        this.roundResultTotal = this.roundEl.querySelector('.round_reult_text');
+        this.roundFinish = this.roundEl.querySelector('.round_finish');
+    }
+
+    prepareSectionForRound() {
+        // this.delay(300);
+        if (this.roundTarget.classList.contains('winner')) {
+            this.roundTarget.classList.remove('winner');
+        }
+        this.hideElement([this.roundCoinInfo, this.roundResult, this.roundResultTotal, this.roundFinish]);
+        this.showElement([this.roundStatus, this.roundTarget, this.counterContainer, this.roundInfo]);
+    }
+
+    //  скрываем элементы 
+    hideElement(elements) {
+        elements.forEach(el => {
+            el.classList.add('slide-hidden');
+            setTimeout(() => {
+                el.classList.add('none');
+            }, this.animationTime);
+        });
+    }
+
+    //  показываем элементы
+    showElement(elements) {
+        elements.forEach(el => {
+            el.classList.remove('none');
+            setTimeout(() => {
+                el.classList.remove('slide-hidden');
+            }, 10);
+        });
     }
 
     waitForKeyPress() {
@@ -27,12 +60,11 @@ class UIController {
                 document.removeEventListener('mousedown', handler);
                 resolve();
             };
-    
+
             document.addEventListener('keydown', handler);
             document.addEventListener('mousedown', handler);
         });
     }
-
 
     updateCounter(counterArr) {
         this.counterContainer.innerHTML = counterArr.map((c, i, arr) => `
@@ -43,20 +75,20 @@ class UIController {
         `).join('');
     }
 
+    async showTooManyFails() {
+        this.roundEl.classList.add('default');
+        this.roundTarget.innerHTML = 'Увы, но даже <br> Леонид Агутин <br> быстрее, чем ты...';
+        this.roundResultTotal.innerHTML = '<p>Приходи позже и попробуй <br> еще раз!</p>'
 
-    showSuccess(result) {
-        console.log("Угадал! Очки:", result.points);
-        // можно визуальный отклик тут
+        this.hideElement([this.roundStatus.parentElement, this.roundCoinInfo, this.counterContainer, this.roundResult, this.roundInfo]);
+        await this.delay(500);
+        this.showElement([this.roundFinish, this.roundResultTotal]);
+        
+        // перезагрузка
+        await this.delay(5000);
+        location.reload();
     }
-    
-    showFail(result) {
-        console.log("Не попал. Очки:", result.points);
-    }
-    
-    showTooManyFails() {
-        console.log("Три ошибки подряд! Спец. экран.");
-        // сюда можно модалку или секцию с сообщением
-    }
+
 
     /**
      * показываем секцию
@@ -147,8 +179,6 @@ class UIController {
         }, 1000);
     }
 
-
-
     showRound(roundNumber, counterArr, fact) {
         this.roundEl.classList.remove('none');
 
@@ -170,21 +200,127 @@ class UIController {
         counterArr.forEach((digit, i) => {
             const digitContainer = document.createElement('div');
             digitContainer.classList.add('digit-container');
-            digitContainer.textContent = digit.alfabet[digit.current];
+            const safeIndex = typeof digit.current === 'number' ? digit.current : 0;
+            digitContainer.textContent = digit.alfabet[safeIndex] ?? '?';
 
             const shadow = document.createElement('div');
             shadow.classList.add('shadow');
             shadow.classList.add(i === counterArr.length - 1 ? 'green' : 'grey');
 
             digitContainer.appendChild(shadow);
-            console.log(digitContainer);
             this.counterContainer.appendChild(digitContainer);
         });
     }
 
-    showEnd() {
-        // подвести итоги
-        console.log('Игра окончена');
+    async showSuccess(result) {
+        this.changecolor('green');
+        this.roundEl.classList.add('right');
+        this.roundEl.classList.remove('default');
+
+        await this.showSalut();
+        this.hideElement([this.counterContainer, this.roundInfo]);
+        this.showElement([this.roundCoinInfo, this.roundResult]);
+
+        this.roundTarget.classList.add('winner');
+        this.roundTarget.innerHTML = 'Победа! <br> Ты заработал';
+
+        this.roundCoinInfo.querySelector('span').textContent = result.points;
+
+        for (let i = 3; i > 0; i--) {
+            this.roundResult.querySelector('span').textContent = i;
+            await this.delay(1000);
+        }
+        this.roundEl.classList.add('default');
+        this.roundEl.classList.remove('right');
+    }
+
+    async showFail(result) {
+        this.changecolor('red');
+        this.roundEl.classList.add('wrong');
+        this.roundEl.classList.remove('default');
+
+        await this.delay(3000);
+
+
+        this.hideElement([this.counterContainer, this.roundInfo]);
+        this.showElement([this.roundResult]);
+        this.roundTarget.classList.add('winner');
+        if (result.round === 3) {
+            this.roundTarget.innerHTML = 'Ты ошибся! <br> Раундов <br> больше нет';
+            this.roundResult.innerHTML = 'Общий результат через <span>3</span>'
+        } else {
+            this.roundTarget.innerHTML = 'Ты ошибся! <br> Попробуй <br> еще раз';
+        }
+        for (let i = 3; i > 0; i--) {
+            this.roundResult.querySelector('span').textContent = i;
+            await this.delay(1000);
+        }
+
+        this.roundEl.classList.add('default');
+        this.roundEl.classList.remove('wrong');
+
+        // result.round == 3 ? this.showEnd(result) : '';
+    }
+
+    showSalut() {
+        return new Promise((resolve) => {
+            const coinImages = ['Coin.svg', 'Silver.svg', 'Gold.svg'];
+            const count = 30;
+            const container = document.getElementById('coin-fireworks');
+            if (!container) return resolve();
+
+            for (let i = 0; i < count; i++) {
+                const img = document.createElement('img');
+                img.src = `./assets/images/salut/${coinImages[Math.floor(Math.random() * coinImages.length)]}`;
+                img.classList.add('coin-piece');
+
+                const dx = (Math.random() - 0.5) * 600;
+                const dy = (Math.random() - 0.5) * 600;
+
+                img.style.setProperty('--x', `${dx}px`);
+                img.style.setProperty('--y', `${dy}px`);
+
+                img.style.left = `${window.innerWidth / 2}px`;
+                img.style.top = `${window.innerHeight / 2}px`;
+
+                container.appendChild(img);
+
+                // Удаляем после окончания
+                setTimeout(() => {
+                    img.remove();
+                    if (i === count - 1) {
+                        resolve(); // когда последний элемент удалится — завершить промис
+                    }
+                }, 2000); // <- длительность анимации
+            }
+        });
+    }
+
+    changecolor(color) {
+        const shadows = this.counterContainer.querySelectorAll('.shadow');
+        shadows.forEach(shadow => {
+            if (shadow.classList.contains('grey') || shadow.classList.contains('green')) {
+                shadow.classList.remove('grey');
+                shadow.classList.remove('green');
+                shadow.classList.add(color);
+            }
+        });
+    }
+
+    async showEnd(scope) {
+        this.roundEl.classList.add('default');
+        this.roundTarget.innerHTML = 'Игра закончилась, <br> всего ты заработал';
+        this.roundCoinInfo.querySelector('span').textContent = scope;
+
+        this.hideElement([this.roundStatus.parentElement, this.counterContainer, this.roundResult, this.roundInfo]);
+        await this.delay(500);
+        this.showElement([this.roundCoinInfo, this.roundResultTotal, this.roundFinish]);
+
+
+        // перезагрузка
+        await this.delay(5000);
+        location.reload();
+
     }
 }
 export default UIController;
