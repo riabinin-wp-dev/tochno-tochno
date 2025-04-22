@@ -41,39 +41,48 @@ title: Документ
         <div class="start_logo_game backtimer_logo">
             <img src="./assets/images/svg/Logo-game.svg" alt="logo game" width="376" height="160">
         </div>
-        <div class="backtimer_count" data-count>3</div>
-        <div class="backtimer_text" data-text>
-            <span>С</span>
-            <span>т</span>
-            <span>а</span>
-            <span>р</span>
-            <span>т</span>
+        <div class="backtimer_count" data-count>
+            <span class="count-item active" data-num="3">3</span>
+            <span class="count-item" data-num="2">2</span>
+            <span class="count-item" data-num="1">1</span>
+            <span class="count-item" data-num="default">4</span>
+            <div class="backtimer_text" data-text>
+                <span>С</span>
+                <span>т</span>
+                <span>а</span>
+                <span>р</span>
+                <span>т</span>
+            </div>
         </div>
     </div>
 </section>
 
 <section id="rounds" class="section round default none">
-    <div class="start_logo_game backtimer_logo">
+    <div class="round_blick">
+        <img class="victory round_blick_image hide" src="./assets/images/State=State2, Color=Green.png" alt="blick">
+        <img class="fail round_blick_image hide" src="./assets/images/State=State2, Color=Red.png" alt="blick">
+    </div>
+    <div class="start_logo_game backtimer_logo z-index">
         <img src="./assets/images/svg/Logo-game.svg" alt="logo game" width="376" height="160">
     </div>
-    <div class="round_status ">Раунд <span>1</span> из 3</div>
-    <div class="round_target ">ПОЙМАЙ 149 000</div>
+    <div class="round_status z-index">Раунд <span>1</span> из 3</div>
+    <div class="round_target z-index">ПОЙМАЙ 149 000</div>
     <!-- <div class="round_target winner" style="display: none;">Победа! <br> Ты заработал</div> -->
-    <div class="round_container">
+    <div class="round_container z-index">
     </div>
-    <div class="round_coin_info">
+    <div class="round_coin_info z-index">
         <span>300</span>
         <img src="./assets/images/svg/Coin.svg" alt="coin">
     </div>
-    <div class="round_reult_text">
+    <div class="round_reult_text z-index">
         <p>Теперь ты знаешь о компании много интересного. Ура!</p>
         <p>Приходи позже и сыграй еще раз!</p>
     </div>
-    <div class="round_result">
+    <div class="round_result z-index">
         Следующий раунд через <span>3</span>
     </div>
-    <div class="round_info">Самый просматриваемый пост на Хабре Service Workers. Инструкция по применению 149 000 k</div>
-    <div class="round_finish">
+    <div class="round_info z-index">Самый просматриваемый пост на Хабре Service Workers. Инструкция по применению 149 000 k</div>
+    <div class="round_finish z-index">
         <div class="imf-wrap">
             <img src="./assets/images/code.png" alt="shortcode">
         </div>

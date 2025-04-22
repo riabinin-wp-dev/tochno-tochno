@@ -12,8 +12,10 @@ class UIController {
         this.roundFinish = this.roundEl.querySelector('.round_finish');
     }
 
+    /**
+     * подготовка секции к райнду
+     */
     prepareSectionForRound() {
-        // this.delay(300);
         if (this.roundTarget.classList.contains('winner')) {
             this.roundTarget.classList.remove('winner');
         }
@@ -21,7 +23,10 @@ class UIController {
         this.showElement([this.roundStatus, this.roundTarget, this.counterContainer, this.roundInfo]);
     }
 
-    //  скрываем элементы 
+    /**
+     * скрываем элементы 
+     * @param {*} elements - массив элементов
+     */
     hideElement(elements) {
         elements.forEach(el => {
             el.classList.add('slide-hidden');
@@ -31,7 +36,10 @@ class UIController {
         });
     }
 
-    //  показываем элементы
+    /**
+    * показываем элементы 
+    * @param {*} elements - массив элементов
+    */
     showElement(elements) {
         elements.forEach(el => {
             el.classList.remove('none');
@@ -40,7 +48,10 @@ class UIController {
             }, 10);
         });
     }
-
+    /**
+     * ожидание клика пробела или энтера
+     * @returns 
+     */
     waitForKeyPress() {
         return new Promise(resolve => {
             function handler(event) {
@@ -53,6 +64,10 @@ class UIController {
         });
     }
 
+    /**
+     * ожидание клика мвшки или клавиши
+     * @returns 
+     */
     waitForClick() {
         return new Promise(resolve => {
             const handler = () => {
@@ -66,6 +81,10 @@ class UIController {
         });
     }
 
+    /**
+     * 
+     * @param {*} counterArr 
+     */
     updateCounter(counterArr) {
         this.counterContainer.innerHTML = counterArr.map((c, i, arr) => `
             <div class="digit-container">
@@ -75,6 +94,9 @@ class UIController {
         `).join('');
     }
 
+    /**
+     * обработка три неудачи подряд
+     */
     async showTooManyFails() {
         this.roundEl.classList.add('default');
         this.roundTarget.innerHTML = 'Увы, но даже <br> Леонид Агутин <br> быстрее, чем ты...';
@@ -83,7 +105,7 @@ class UIController {
         this.hideElement([this.roundStatus.parentElement, this.roundCoinInfo, this.counterContainer, this.roundResult, this.roundInfo]);
         await this.delay(500);
         this.showElement([this.roundFinish, this.roundResultTotal]);
-        
+
         // перезагрузка
         await this.delay(5000);
         location.reload();
@@ -119,29 +141,25 @@ class UIController {
         const textEl = document.querySelector('[data-text]');
 
         for (let i = 3; i > 0; i--) {
-            countEl.textContent = i;
-            await this.delay(1000);
-        }
 
-        // Скрываем счёт
-        countEl.classList.add('hide');
-        setTimeout(() => {
-            countEl.classList.add('slide-up');
-        }, 300);
-        textEl.classList.remove('hidden');
+            countEl.querySelector(`[data-num="${i}"]`).classList.add('active');
+            await this.delay(1000);
+            countEl.querySelector(`[data-num="${i}"]`).classList.add('slide');
+
+        }
 
         setTimeout(() => {
             textEl.classList.add('active');
-        }, 600);
-        // Показываем надпись
-        // textEl.textContent = 'Старт!';
-
+        }, 300);
         await this.delay(1000);
-        textEl.classList.add('disperse');
-        this.disperseText(textEl);
+        textEl.classList.add('scale');
+        setTimeout(() => {
+            textEl.classList.remove('active');
+        }, 300);
+
 
         //продублируем время для анимаации
-        await this.delay(3000)
+        await this.delay(1000)
     }
 
     /**
@@ -154,31 +172,11 @@ class UIController {
     }
 
     /**
-     * функция рассеивания слова
-     * @param {*} element 
+     * показываем раунд
+     * @param {*} roundNumber 
+     * @param {*} counterArr 
+     * @param {*} fact 
      */
-    disperseText(el) {
-        const spans = el.querySelectorAll('span');
-
-        spans.forEach((span, i) => {
-            // Случайное направление и расстояние
-            const angle = Math.random() * 2 * Math.PI; // от 0 до 2π
-            const radius = 40 + Math.random() * 40; // от 40 до 80px
-            const x = Math.cos(angle) * radius;
-            const y = Math.sin(angle) * radius;
-            const rotate = (Math.random() * 60 - 30).toFixed(1); // -30 до 30 градусов
-
-            span.style.setProperty('--x', `${x}px`);
-            span.style.setProperty('--y', `${y}px`);
-            span.style.setProperty('--r', `${rotate}deg`);
-            span.style.setProperty('--i', i);
-        });
-
-        setTimeout(() => {
-            el.classList.add('animate');
-        }, 1000);
-    }
-
     showRound(roundNumber, counterArr, fact) {
         this.roundEl.classList.remove('none');
 
@@ -212,12 +210,33 @@ class UIController {
         });
     }
 
+    /**
+     * блик фона
+     * @param {*} selector 
+     */
+    async showblick(selector) {
+        const image = document.querySelector(selector);
+        image.classList.remove('hide');
+        image.classList.add('blick');
+        await this.delay(5000);
+        image.classList.remove('blick');
+        image.classList.add('hide');
+    }
+
+    /**
+     * показываем успех
+     * @param {*} result результат объект 
+     */
     async showSuccess(result) {
         this.changecolor('green');
         this.roundEl.classList.add('right');
         this.roundEl.classList.remove('default');
 
-        await this.showSalut();
+        setTimeout(() => {
+            this.showSalut();
+        }, 2000);
+        await this.showblick('.victory');
+
         this.hideElement([this.counterContainer, this.roundInfo]);
         this.showElement([this.roundCoinInfo, this.roundResult]);
 
@@ -234,13 +253,15 @@ class UIController {
         this.roundEl.classList.remove('right');
     }
 
+    /**
+     * отрабатываем неудачу
+     * @param {*} result 
+     */
     async showFail(result) {
         this.changecolor('red');
         this.roundEl.classList.add('wrong');
         this.roundEl.classList.remove('default');
-
-        await this.delay(3000);
-
+        await this.showblick('.fail');
 
         this.hideElement([this.counterContainer, this.roundInfo]);
         this.showElement([this.roundResult]);
@@ -262,40 +283,48 @@ class UIController {
         // result.round == 3 ? this.showEnd(result) : '';
     }
 
+    /**
+     * отображаем салют
+     * @returns 
+     */
     showSalut() {
         return new Promise((resolve) => {
             const coinImages = ['Coin.svg', 'Silver.svg', 'Gold.svg'];
-            const count = 30;
+            const count = 100;
             const container = document.getElementById('coin-fireworks');
             if (!container) return resolve();
+
+            let done = 0;
 
             for (let i = 0; i < count; i++) {
                 const img = document.createElement('img');
                 img.src = `./assets/images/salut/${coinImages[Math.floor(Math.random() * coinImages.length)]}`;
                 img.classList.add('coin-piece');
 
-                const dx = (Math.random() - 0.5) * 600;
-                const dy = (Math.random() - 0.5) * 600;
+                const startX = Math.random() * window.innerWidth;
+                const delay = Math.random() * 1000; // до 1 сек задержки
 
-                img.style.setProperty('--x', `${dx}px`);
-                img.style.setProperty('--y', `${dy}px`);
-
-                img.style.left = `${window.innerWidth / 2}px`;
-                img.style.top = `${window.innerHeight / 2}px`;
+                img.style.left = `${startX}px`;
+                img.style.top = `-50px`;
+                img.style.animationDelay = `${delay}ms`;
 
                 container.appendChild(img);
 
-                // Удаляем после окончания
                 setTimeout(() => {
                     img.remove();
-                    if (i === count - 1) {
-                        resolve(); // когда последний элемент удалится — завершить промис
-                    }
-                }, 2000); // <- длительность анимации
+                    done++;
+                    if (done === count) resolve();
+                }, 2500 + delay); // учли задержку + длительность анимации
             }
         });
     }
 
+
+
+    /**
+     * смена фона цифр
+     * @param {*} color 
+     */
     changecolor(color) {
         const shadows = this.counterContainer.querySelectorAll('.shadow');
         shadows.forEach(shadow => {
@@ -307,6 +336,10 @@ class UIController {
         });
     }
 
+    /**
+     * отображение итога
+     * @param {*} scope 
+     */
     async showEnd(scope) {
         this.roundEl.classList.add('default');
         this.roundTarget.innerHTML = 'Игра закончилась, <br> всего ты заработал';

@@ -1,5 +1,13 @@
 @use 'blocks/vars'as *;
 
+.start{
+    max-height: 100vh;
+}
+.start_bottom{
+    display: flex;
+    align-items: flex-end;
+}
+
 .vertical .start {
     background-size: cover;
     background-position: center;

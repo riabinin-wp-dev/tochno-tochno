@@ -1,5 +1,9 @@
 @use 'blocks/vars' as *;
 
+
+.hello{
+    max-height: 100vh;
+}
 .vertical .hello {
 
     background-size: cover;

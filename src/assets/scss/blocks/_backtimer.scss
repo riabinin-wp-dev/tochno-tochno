@@ -5,24 +5,46 @@
     transition: all 0.5s linear;
     display: flex;
     justify-content: center;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
 
-    &.hidden {
-        margin-top: -100% !important;
-    }
+    // &.hidden {
+    //     margin-top: -100% !important;
+    // }
 
     &.active {
         opacity: 1;
+    }
+    &.scale{
+        transform: translateX(-50%) scale(60);
     }
 }
 
 .backtimer_count {
     transition: all 0.5s linear;
+    position: relative;
+
+    & .count-item.active {
+        position: absolute;
+        opacity: 1;
+    }
+
+    & .count-item {
+        transition: all 0.5s linear;
+        opacity: 0;
+
+        &.slide {
+            transform: translateY(200vh);
+        }
+    }
+
 
     &.hide {
         opacity: 0;
     }
 
-    &.slide-up{
+    &.slide-up {
         margin-top: -100% !important;
     }
 }
@@ -31,23 +53,28 @@
     opacity: 1;
     transition: opacity 0.3s;
 
-    & span{
+    & span {
         transition: transform 0.8s ease, opacity 0.8s ease;
         transform: translate(0, 0) rotate(0deg);
     }
 }
 
+.backtimer_text {
+    position: absolute;
+    z-index: 1;
+}
+
 .disperse.animate span {
     animation: disperseRandom 1.5s ease forwards;
-  animation-delay: calc(var(--i) * 40ms);
+    animation-delay: calc(var(--i) * 40ms);
 }
 
 @keyframes disperseRandom {
     to {
-      transform: translate(var(--x), var(--y)) rotate(var(--r));
-      opacity: 0;
+        transform: translate(var(--x), var(--y)) rotate(var(--r));
+        opacity: 0;
     }
-  }
+}
 
 .vertical .backtimer {
     background-size: cover;
@@ -87,7 +114,7 @@
         letter-spacing: -0.02em;
         text-align: center;
         color: #141414;
-        margin-top: calc(170 / $mobilever * 1vw);
+        // margin-top: calc(170 / $mobilever * 1vw);
     }
 }
 
@@ -129,6 +156,6 @@
         letter-spacing: -0.02em;
         text-align: center;
         color: #141414;
-        margin-top: calc(170 / $mobilehor * 1vh);
+        // margin-top: calc(170 / $mobilehor * 1vh);
     }
 }

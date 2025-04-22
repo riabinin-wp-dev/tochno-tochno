@@ -86,18 +86,24 @@ class GameManager {
         }
     }
 
-
+    /**
+     * старт счетчика
+     */
     startCounter() {
         this.started = true;
         this.doCycle();
     }
+
+      /**
+     * стоп счетчика
+     */
     async stopCounter() {
         this.started = false;
 
         const isCorrect = this.checkText();
 
         const result = {
-            points: isCorrect ? 300 : 0, 
+            points: isCorrect ? 300 : 0,
             success: isCorrect,
             round: this.round
         };
@@ -120,6 +126,9 @@ class GameManager {
 
     }
 
+      /**
+     * успех
+     */
     async handleSuccess() {
         const result = {
             points: 300,
@@ -131,14 +140,17 @@ class GameManager {
         await this.ui.showSuccess(result);
 
 
-        if(this.round >= this.maxRounds){
+        if (this.round >= this.maxRounds) {
             this.ui.showEnd(this.player.getScore());
-        }else{
+        } else {
             this.startNextRound();
         }
     }
 
-   async handleFail(isTimeout = false) {
+      /**
+     * неудача + обработка по таймеру
+     */
+    async handleFail(isTimeout = false) {
         const result = {
             points: 0,
             success: false,
@@ -153,9 +165,9 @@ class GameManager {
             this.ui.showTooManyFails();
             return;
         }
-        if(this.round >= this.maxRounds){
+        if (this.round >= this.maxRounds) {
             this.ui.showEnd(this.player.getScore());
-        }else{
+        } else {
             this.startNextRound();
         }
     }
