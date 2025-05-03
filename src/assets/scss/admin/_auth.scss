@@ -1,0 +1,64 @@
+@use 'blocks/vars' as *;
+
+.auth {
+    background-size: cover;
+    width: 100vw;
+    height: 100vh;
+    background-repeat: no-repeat;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &_inner {
+        display: flex;
+        flex-direction: column;
+        gap: calc(24 / 12.8 * 1vw);
+    }
+
+    & h2 {
+        margin: 0;
+        font-family: var(--interface-semibold);
+        font-weight: 600;
+        font-size: calc(28 / 12.8 * 1vw);
+        line-height: 114%;
+        letter-spacing: -0.02em;
+        color: #141414;
+
+        & span {
+            color: #1ba136;
+        }
+    }
+
+    &_form {
+        border-radius: calc(24 / 12.8 * 1vw);
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0) 100%);
+        padding: calc(16 / 12.8 * 1vw) calc(12 / 12.8 * 1vw) calc(12 / 12.8 * 1vw) calc(12 / 12.8 * 1vw);
+        display: flex;
+        gap: calc(12 / 12.8 * 1vw);
+    }
+
+    &_input {
+        background: #fff;
+        border: 1px solid rgba(20, 20, 20, 0.12);
+        border-radius: calc(12 / 12.8 * 1vw);
+        padding: calc(14 / 12.8 * 1vw) calc(16 / 12.8 * 1vw);
+        font-weight: 400;
+        font-size: 15px;
+        line-height: 133%;
+        letter-spacing: -0.01em;
+        color: #b8b8b8;
+    }
+
+    &_submit {
+        background: #1db93c;
+        border-radius: calc(12 / 12.8 * 1vw);
+        padding: calc(13 / 12.8 * 1vw) calc(20 / 12.8 * 1vw);
+        border: none;
+        font-weight: 600;
+        font-size: calc(15 / 12.8 * 1vw);
+        line-height: 133%;
+        letter-spacing: -0.01em;
+        text-align: center;
+        color: #fff;
+    }
+}

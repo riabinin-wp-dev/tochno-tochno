@@ -1,0 +1,126 @@
+---
+layout: admin
+title: Документ
+---
+
+
+<section class="admin" style="background-image: url(./assets/images/admin/Effects.png);">
+    <div class="container">
+        <div class="admin_top">
+            <h2>Админка <span>Точно-Точно</span></h2>
+            <form action="" class="admin_logout" method="post">
+                <button type="submit">Выйти</button>
+            </form>
+        </div>
+        <div class="admin_inner">
+            <div class="admin_inner_wrapper">
+                <ul class="admin_container --title">
+                    <li class="title">
+                        <span>№</span>
+                        <span>ID</span>
+                        <span>Имя</span>
+                        <span>Время старта</span>
+                    </li>
+                </ul>
+                <ul id="admin_container" class="admin_container">
+                    <li class="wait">
+                        <span>157</span>
+                        <span>1467</span>
+                        <span>Максим</span>
+                        <div class="control">
+                            <span>Очередь 5</span>
+                            <button type="button" class="start"></button>
+                        </div>
+                    </li>
+                    <li class="active">
+                        <span>157</span>
+                        <span>1467</span>
+                        <span>Максим</span>
+                        <div class="control">
+                            <span>Идёт игра</span>
+                            <button type="button" class="stop"></button>
+                        </div>
+                    </li>
+                    <li>
+                        <span>157</span>
+                        <span>1467</span>
+                        <span>Сергей</span>
+                        <div class="control">
+                            <span class="coin">500</span>
+                            <span class="time">11:28</span>
+                        </div>
+                    </li>   
+                    <li>
+                        <span>157</span>
+                        <span>1467</span>
+                        <span>Татьяна</span>
+                        <div class="control">
+                            <span class="coin">500</span>
+                            <button type="button" class="stop"></button>
+                        </div>
+                    </li>  
+                     <li  class="enqueue">
+                        <span>157</span>
+                        <span>1467</span>
+                        <span>Максим</span>
+                        <div class="control">
+                            <span class="coin">500</span>
+                            <span class="time">11:28</span>
+                        </div>
+                    </li>  <li  class="enqueue">
+                        <span>157</span>
+                        <span>1467</span>
+                        <span>Максим</span>
+                        <div class="control">
+                            <span class="coin">500</span>
+                            <span class="time">11:28</span>
+                        </div>
+                    </li>
+    
+                    <li class="reset">
+                        <span>
+                            <a href="">
+                                Сбросить результаты поиска
+                            </a>
+                        </span>
+                    </li>
+                </ul>
+            </div>
+
+            <aside>
+                <form action="" class="admin_form_add">
+                    <h3 class="admin_form_title">Новый игрок</h3>
+                    <label for="player_id" class="admin_label">
+                        <img src="./assets/images/admin/Icon/Calendar.svg" alt="">
+                        <input type="text" name="player_id" id="player_id" placeholder="ID на бейдже">
+                    </label>
+
+                    <label for="player_name" class="admin_label">
+                        <img src="./assets/images/admin/Icon/Profile.svg" alt="">
+                        <input type="text" name="player_name" id="player_name" placeholder="Имя">
+                    </label>
+
+                    <label for="player_telegram" class="admin_label">
+                        <img src="./assets/images/admin/Icon/chat.svg" alt="" class="telegram">
+                        <input type="text" name="player_telegram" id="player_telegram" placeholder="Телеграм">
+                    </label>
+
+                    <button type="submit" class="admin_submit">
+                        Добавить
+                    </button>
+                </form>
+
+                <form action="" class="admin_form_search">
+                    <h3 class="admin_form_title">Поиск по списку</h3>
+                    <label for="search_player_id" class="admin_label">
+                        <img src="./assets/images/admin/Icon/Calendar.svg" alt="">
+                        <input type="text" name="search_player_id" id="search_player_id" placeholder="ID на бейдже">
+                    </label>
+                    <button type="submit" class="admin_submit --transparent">
+                        Найти
+                    </button>
+                </form>
+            </aside>
+        </div>
+    </div>
+</section>

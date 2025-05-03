@@ -13,12 +13,16 @@
 @use 'blocks/round' as *;
 
 
+//админ панель
+@use  'admin/auth';
+@use  'admin/admin';
+
 
 html,
 body {
   height: 100%;
   margin: 0;
-  font-family: var(--font-family);
+  // font-family: var(--sans-semibold);
   //  background-color: var(--accent-color);
 }
 

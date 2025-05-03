@@ -5,7 +5,7 @@
     --interface-semibold: "SB Sans Interface Semibold", sans-serif;
     --sans-semibold: "SB Sans Text Semibold"; 
     --sans-regular: "SB Sans Text"; 
-    --content-width: 1920px;
+    --content-width: calc(768 / 12.8 * 1vw);
     --content-fluid-width: 1690px;
     --container-offset: 30px;
     --container-width: calc(var(--content-width) + (var(--container-offset) * 2));

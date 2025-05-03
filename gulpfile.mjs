@@ -1,4 +1,6 @@
+// import gulp, { series } from 'gulp';
 import gulp from 'gulp';
+const { series } = gulp;
 import webp from 'gulp-webp';
 import autoprefixer from "gulp-autoprefixer";
 import removeComments from "gulp-strip-css-comments";
@@ -20,6 +22,8 @@ import imagemin from 'gulp-imagemin'; // Импортируем оптимиза
 import mozjpeg from 'imagemin-mozjpeg'; // Импортируем плагин для jpeg
 import optipng from 'imagemin-optipng'; // Импортируем плагин для png
 import svgo from 'imagemin-svgo'; // Импортируем плагин для svg
+import debug from 'gulp-debug'; // Импортируем gulp-debug
+
 /* Установка компилятора для gulp-sass */
 const sass = gulpSass(sassCompiler);
 // Путь для исходных и выходных данных
@@ -64,7 +68,7 @@ const path = {
             srcPath + "assets/images/**/*.{jpg,png,gif,ico,webp,webmanifest,xml,json}",
             `!${srcPath}assets/images/**/*.svg`, `!${srcPath}assets/images/**/*.webp` // Исключаем SVG
         ],
-        imagessvg: distPath + "assets/images/**/*.svg", // Наблюдение за SVG изображениями в папке dist
+        imagessvg: srcPath + "assets/images/**/*.svg", // Наблюдение за SVG изображениями в папке dist
         fonts: srcPath + "assets/fonts/**/*.{eot,woff,woff2,ttf}" // Наблюдение за шрифтами
     },
     clean: distPath // Путь для очистки dist
@@ -182,7 +186,7 @@ gulp.task('js', (cb) => {
             }
         }))
         .pipe(webpackStream({
-            mode: "production",
+            mode: "development",
             entry: entries,
             output: {
                 filename: '[name].js',
@@ -272,14 +276,27 @@ gulp.task('spriteWatch', gulp.series('sprite', (cb) => {
     cb();
 }));
 
+gulp.task('svg', ()=>{
+    return gulp.src(path.src.imagessvg)
+    .pipe(gulp.dest(path.build.images));
+});
+
+gulp.task('svgWatch', gulp.series('svg', (cb) =>{
+    gulp.watch(path.watch.imagessvg, gulp.series('svg'));
+    cb();
+}));
+
 gulp.task('fonts', () => {
     return gulp.src(path.src.fonts, {
         encoding: false, // Important!
         removeBOM: false,
     })
-        .pipe(ttf2woff2())  // Преобразование шрифтов в woff2
-        .pipe(gulp.dest(path.build.fonts))  // Путь для сохранения шрифтов
-        .pipe(browserSync.reload({ stream: true }));  // Обновление браузера
+    .pipe(debug({ title: 'Before ttf2woff2:' }))
+    .pipe(ttf2woff2())
+    .pipe(debug({ title: 'After ttf2woff2:' }))
+    .pipe(gulp.dest(path.build.fonts))
+    .pipe(debug({ title: 'After dest:' }))
+    .pipe(browserSync.reload({ stream: true }));
 });
 
 gulp.task('fontsWatch', gulp.series('fonts', (cb) => {
@@ -301,7 +318,8 @@ gulp.task('default',
       'css',                 // CSS
       'js',                  // JS
       'fonts',               // Шрифты
-    //   'sprite',              // Спрайты
+      'sprite',   
+      'svg',           
       gulp.parallel(         // Параллельно
         'imagesOptimize',     // Оптимизация изображений
         'imagesWebp',         // Конвертация в WebP
@@ -314,7 +332,8 @@ gulp.task('default',
         'imagesOptimizeWatch',            
         'imagesWebpWatch',            
         'imagesAvifWatch',            
-        // 'spriteWatch',            
+        'spriteWatch',            
+        'svgWatch',            
         'fontsWatch',            
         'serve'              
       )
