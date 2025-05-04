@@ -99,8 +99,8 @@ class UIController {
      */
     async showTooManyFails() {
         this.roundEl.classList.add('default');
-        this.roundTarget.innerHTML = 'Увы, но даже <br> Леонид Агутин <br> быстрее, чем ты...';
-        this.roundResultTotal.innerHTML = '<p>Приходи позже и попробуй <br> еще раз!</p>'
+        this.roundTarget.innerHTML = 'Мы так и знали, что Баромир справится лучше тебя!';
+        this.roundResultTotal.innerHTML = '<p>Но приходи позже и попробуй ещё раз!</p>'
 
         this.hideElement([this.roundStatus.parentElement, this.roundCoinInfo, this.counterContainer, this.roundResult, this.roundInfo]);
         await this.delay(500);
@@ -241,7 +241,7 @@ class UIController {
         this.showElement([this.roundCoinInfo, this.roundResult]);
 
         this.roundTarget.classList.add('winner');
-        this.roundTarget.innerHTML = 'Победа! <br> Ты заработал';
+        this.roundTarget.innerHTML = 'Точно, как 2ГИС!  <br> На твоём счету:';
 
         this.roundCoinInfo.querySelector('span').textContent = result.points;
 
@@ -267,10 +267,10 @@ class UIController {
         this.showElement([this.roundResult]);
         this.roundTarget.classList.add('winner');
         if (result.round === 3) {
-            this.roundTarget.innerHTML = 'Ты ошибся! <br> Раундов <br> больше нет';
+            this.roundTarget.innerHTML = 'Мда, плохо. Плохо-плохо, неважно 😐 <br> Ещё и попытки закончились';
             this.roundResult.innerHTML = 'Общий результат через <span>3</span>'
         } else {
-            this.roundTarget.innerHTML = 'Ты ошибся! <br> Попробуй <br> еще раз';
+            this.roundTarget.innerHTML = 'Мда, плохо. Плохо-плохо, неважно 😐 <br> Попробуй ещё раз!';
         }
         for (let i = 3; i > 0; i--) {
             this.roundResult.querySelector('span').textContent = i;
@@ -342,7 +342,7 @@ class UIController {
      */
     async showEnd(scope) {
         this.roundEl.classList.add('default');
-        this.roundTarget.innerHTML = 'Игра закончилась, <br> всего ты заработал';
+        this.roundTarget.innerHTML = 'Игра закончилась, <br> на твоём счету:';
         this.roundCoinInfo.querySelector('span').textContent = scope;
 
         this.hideElement([this.roundStatus.parentElement, this.counterContainer, this.roundResult, this.roundInfo]);

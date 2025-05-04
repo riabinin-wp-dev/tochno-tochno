@@ -140,6 +140,15 @@ class PlayerPool {
             console.error('Токен сессии обязателен для запуска');
             return null;
         }
+
+        const stopButtonExists = this.container.querySelector('.stop');
+        if (stopButtonExists) {
+            const confirmStart = confirm('Уже есть активная сессия. Продолжить? Текущая будет остановлена без сохранения очков.');
+            if (!confirmStart) {
+                console.log('Запуск отменён пользователем');
+                return;
+            }
+        }
     
         try {
             const response = await fetch(`${PlayerPool.BASE_URL}/admin/games/${PlayerPool.gameToken}/start`, {

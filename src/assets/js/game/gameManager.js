@@ -8,6 +8,10 @@ import Player from "./player.js";
 import UIController from "./UIController.js";
 
 class GameManager {
+
+    static gameToken = 'gAmEToKeN1';
+    static adminKey = 'Q3z8vKp9N2w5R6s1Xy7L';
+
     constructor() {
         this.round = 0;
         this.maxRounds = 3;
@@ -20,12 +24,17 @@ class GameManager {
         this.ui = new UIController();
         this.data = new DataManager();
 
+        this.ws = null;
+
         this.init();
     }
 
     async init() {
         // /первый экран
-        await this.ui.waitForKeyPress();
+        await this.fetchNextRound();
+        // await this.ui.waitForKeyPress();
+
+        await this.connectWebSocket();
         this.ui.showSection('start', 'hello', this.player.getName());
 
         //второй экран
@@ -37,6 +46,116 @@ class GameManager {
         //раунд
         this.startGame();
 
+    }
+
+    /**
+     * тестово получаем данные для раунда
+     * @returns 
+     */
+    async fetchNextRound() {
+        const sessionToken = '9oyITlF4Vd';
+        const playerToken = 'tokn000005';
+        const url = `https://gameserver2.kemo.ru/api/games/${GameManager.gameToken}/session/${sessionToken}/next`;
+
+        try {
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Player-Token': playerToken,
+                }
+            });
+
+            const result = await response.json();
+            console.log('[API] Ответ на запрос следующего раунда:', result);
+
+            const data = result.data;
+
+            if (!data.success) {
+                console.warn('[API] Ошибка при получении следующего раунда:', data.message);
+                return null;
+            }
+
+            return {
+                roundNumber: data.round_number,
+                text: data.game_specific_data.text,
+                targetTimeMs: data.game_specific_data.target_time_ms,
+                factId: data.game_specific_data.fact_id
+            };
+
+        } catch (error) {
+            console.error('[API] Ошибка запроса следующего раунда:', error);
+            return null;
+        }
+    }
+
+
+    /**
+     * веб сокет
+     * @returns  
+     */
+    connectWebSocket() {
+        return new Promise((resolve, reject) => {
+            const wsUrl = `wss://gameserver2.kemo.ru/ws?game_token=${GameManager.gameToken}`;
+            this.ws = new WebSocket(wsUrl);
+
+            console.log(wsUrl);
+            const authPayload = {
+                admin_key: GameManager.adminKey
+            };
+
+            this.ws.onopen = () => {
+                setTimeout(() => {
+                    this.ws.send(JSON.stringify(authPayload));
+                    console.log('[WS] Подключено. Отправляем admin_key: ', authPayload);
+                }, 100);
+            };
+
+            this.ws.onmessage = async (event) => {
+                const data = JSON.parse(event.data);
+
+                switch (data.event) {
+                    case 'auth_ok':
+                        console.log('[WS] Аутентификация успешна');
+                        break;
+
+                    case 'auth_failed':
+                        console.error('[WS] Ошибка авторизации:', data.message);
+                        this.ws.close();
+                        reject(data.message);
+                        break;
+
+                    case 'game_started':
+                        console.log('[WS] Получено событие game_started', data.payload);
+
+                        this.player.setFromPayload(data.payload.player); // например, установить badge_id, name и player_token
+                        this.sessionToken = data.payload.session_token;
+
+                        this.ui.showSection('start', 'hello', this.player.getName());
+
+                        await this.ui.delay(1000); // можно анимацию
+                        this.ui.showSection('hello', 'backtimer');
+                        await this.ui.runBacktimer();
+
+                        this.ui.showSection('backtimer', 'rounds');
+                        await this.startGame();
+                        break;
+
+                    default:
+                        console.warn('[WS] Неизвестное событие:', data);
+                        break;
+                }
+            };
+
+            this.ws.onerror = (error) => {
+                console.error('[WS] Ошибка соединения:', error);
+                reject(error);
+            };
+
+            this.ws.onclose = () => {
+                console.warn('[WS] Соединение закрыто');
+            };
+        });
     }
 
     /**
@@ -68,8 +187,8 @@ class GameManager {
 
         this.startCounter();
 
-        // Ожидаем клик, но с таймаутом
-        const timeout = 30000; // 30 сек
+        // Ожидаем клик, с таймаутом
+        const timeout = 30000; 
         const clickPromise = this.ui.waitForClick();
         const timeoutPromise = new Promise(resolve => setTimeout(() => resolve('timeout'), timeout));
 
@@ -78,7 +197,7 @@ class GameManager {
         this.stopCounter();
 
         if (result === 'timeout') {
-            console.warn('⏰ Время ожидания истекло');
+            console.warn('Время ожидания истекло');
             this.handleFail(true); // true —  таймаут
         } else {
             const isCorrect = this.checkText();
@@ -94,9 +213,9 @@ class GameManager {
         this.doCycle();
     }
 
-      /**
-     * стоп счетчика
-     */
+    /**
+   * стоп счетчика
+   */
     async stopCounter() {
         this.started = false;
 
@@ -109,7 +228,7 @@ class GameManager {
         };
 
         this.player.saveResult(result);
-        this.player.sendResultToServer?.(result); // заглушка на отправку
+        // this.player.sendResultToServer?.(result); // заглушка на отправку
 
         if (isCorrect) {
             this.failedAttempts = 0;
@@ -126,9 +245,9 @@ class GameManager {
 
     }
 
-      /**
-     * успех
-     */
+    /**
+   * успех
+   */
     async handleSuccess() {
         const result = {
             points: 300,
@@ -147,9 +266,9 @@ class GameManager {
         }
     }
 
-      /**
-     * неудача + обработка по таймеру
-     */
+    /**
+   * неудача + обработка по таймеру
+   */
     async handleFail(isTimeout = false) {
         const result = {
             points: 0,
