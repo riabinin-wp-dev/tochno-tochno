@@ -302,7 +302,7 @@ class UIController {
                 img.classList.add('coin-piece');
 
                 const startX = Math.random() * window.innerWidth;
-                const delay = Math.random() * 1000; // до 1 сек задержки
+                const delay = Math.random() * 1000; 
 
                 img.style.left = `${startX}px`;
                 img.style.top = `-50px`;
@@ -314,7 +314,7 @@ class UIController {
                     img.remove();
                     done++;
                     if (done === count) resolve();
-                }, 2500 + delay); // учли задержку + длительность анимации
+                }, 2500 + delay); // задержка + длительность анимации
             }
         });
     }
@@ -352,7 +352,7 @@ class UIController {
 
         // перезагрузка
         await this.delay(5000);
-        location.reload();
+        // location.reload();
 
     }
 }

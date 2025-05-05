@@ -31,9 +31,6 @@ class GameManager {
 
     async init() {
         // /первый экран
-        await this.fetchNextRound();
-        // await this.ui.waitForKeyPress();
-
         await this.connectWebSocket();
         this.ui.showSection('start', 'hello', this.player.getName());
 
@@ -46,47 +43,6 @@ class GameManager {
         //раунд
         this.startGame();
 
-    }
-
-    /**
-     * тестово получаем данные для раунда
-     * @returns 
-     */
-    async fetchNextRound() {
-        const sessionToken = '9oyITlF4Vd';
-        const playerToken = 'tokn000005';
-        const url = `https://gameserver2.kemo.ru/api/games/${GameManager.gameToken}/session/${sessionToken}/next`;
-
-        try {
-            const response = await fetch(url, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Player-Token': playerToken,
-                }
-            });
-
-            const result = await response.json();
-            console.log('[API] Ответ на запрос следующего раунда:', result);
-
-            const data = result.data;
-
-            if (!data.success) {
-                console.warn('[API] Ошибка при получении следующего раунда:', data.message);
-                return null;
-            }
-
-            return {
-                roundNumber: data.round_number,
-                text: data.game_specific_data.text,
-                targetTimeMs: data.game_specific_data.target_time_ms,
-                factId: data.game_specific_data.fact_id
-            };
-
-        } catch (error) {
-            console.error('[API] Ошибка запроса следующего раунда:', error);
-            return null;
-        }
     }
 
 
@@ -105,10 +61,12 @@ class GameManager {
             };
 
             this.ws.onopen = () => {
-                setTimeout(() => {
+                if (this.ws.readyState === WebSocket.OPEN) {
                     this.ws.send(JSON.stringify(authPayload));
                     console.log('[WS] Подключено. Отправляем admin_key: ', authPayload);
-                }, 100);
+                } else {
+                    console.error('[WS] WebSocket не в состоянии OPEN');
+                }
             };
 
             this.ws.onmessage = async (event) => {
@@ -127,18 +85,8 @@ class GameManager {
 
                     case 'game_started':
                         console.log('[WS] Получено событие game_started', data.payload);
-
-                        this.player.setFromPayload(data.payload.player); // например, установить badge_id, name и player_token
-                        this.sessionToken = data.payload.session_token;
-
-                        this.ui.showSection('start', 'hello', this.player.getName());
-
-                        await this.ui.delay(1000); // можно анимацию
-                        this.ui.showSection('hello', 'backtimer');
-                        await this.ui.runBacktimer();
-
-                        this.ui.showSection('backtimer', 'rounds');
-                        await this.startGame();
+                        this.player.initializePlayer(data.payload);
+                        resolve();
                         break;
 
                     default:
@@ -152,8 +100,11 @@ class GameManager {
                 reject(error);
             };
 
-            this.ws.onclose = () => {
-                console.warn('[WS] Соединение закрыто');
+            this.ws.onclose = (event) => {
+                console.warn(`[WS] Соединение закрыто. Код: ${event.code}, причина: ${event.reason}`);
+                if (event.code === 1008) { // 1008 обычно для ошибок авторизации
+                    console.error('[WS] Ошибка авторизации - проверьте admin_key');
+                }
             };
         });
     }
@@ -228,7 +179,7 @@ class GameManager {
         };
 
         this.player.saveResult(result);
-        // this.player.sendResultToServer?.(result); // заглушка на отправку
+        this.player.sendResultToServer?.(isCorrect, result.round); 
 
         if (isCorrect) {
             this.failedAttempts = 0;
