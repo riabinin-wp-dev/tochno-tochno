@@ -20,6 +20,18 @@
     
     
 </head>
+<script>
+    (function checkAdminToken() {
+        const token = localStorage.getItem('admin_token');
+        const expires = localStorage.getItem('admin_token_expires');
+
+        // Если токена нет или он истёк — редирект на /auth.html
+        if (!token || !expires || Date.now() > Number(expires)) {
+            console.warn('[AUTH] Токен не найден или истёк. Перенаправляем на /auth.html');
+            window.location.href = '/auth.html';
+        }
+    })();
+</script>
 
 <body>
     <div class="page">

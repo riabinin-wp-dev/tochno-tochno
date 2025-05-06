@@ -24,16 +24,23 @@ class PlayerFormHandler {
         submitButton.disabled = true;
         submitButton.textContent = 'Добавление...';
 
-        const player = await Player.register(badgeId, name, telegram || null);
-        console.log(player.token);
-
-        if (player) {
-            alert(`Игрок зарегистрирован: ${player.name}`);
-        } 
-        this.form.reset();
-
-        submitButton.disabled = false;
-        submitButton.textContent = 'Добавить';
+        try {
+            const player = await Player.register(badgeId, name, telegram || null);
+            console.log(player?.token);
+    
+            if (player && player.name) {
+                alert(`Игрок зарегистрирован: ${player.name}`);
+            } else {
+                alert('Ошибка регистрации игрока.');
+            }
+        } catch (error) {
+            console.error('Ошибка при регистрации игрока:', error);
+            alert('Произошла ошибка при регистрации. Попробуйте снова.');
+        } finally {
+            this.form.reset();
+            submitButton.disabled = false;
+            submitButton.textContent = 'Добавить';
+        }
     }
 }
 

@@ -116,6 +116,7 @@
 
             &.active {
                 background: rgba(27, 161, 54, 0.16);
+                order: -1;
 
                 & span {
                     color: #1ba136;

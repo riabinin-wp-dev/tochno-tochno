@@ -1,8 +1,9 @@
 import checkRatio from "./common/ratio.js";
 import GameManager from "./game/gameManager.js";
 
-
-new GameManager(); 
+document.addEventListener('DOMContentLoaded',()=>{
+    new GameManager(); 
+})
 
 
 /**

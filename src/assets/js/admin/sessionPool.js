@@ -1,3 +1,5 @@
+import AdminAuth from "../auth/adminAuth.js";
+
 class PlayerPool {
     static BASE_URL = 'https://gameserver2.kemo.ru/api';
     static gameToken = 'gAmEToKeN1';
@@ -15,10 +17,19 @@ class PlayerPool {
      * @returns 
      */
     async loadPool() {
+        const token = new AdminAuth();
+
+        if (!token) {
+            console.error('[AUTH] Нет токена администратора');
+            window.location.href = '/auth.html';
+            return;
+        }
+
         const response = await fetch(`${PlayerPool.BASE_URL}/admin/games/${PlayerPool.gameToken}/pool?status=started,pending,completed, stopped_by_admin, abandoned`, {
             method: 'GET',
             headers: {
-                'X-Admin-API-Key': PlayerPool.adminKey,
+                'Authorization': `Bearer ${token}`,
+                // 'X-Admin-API-Key': PlayerPool.adminKey,
                 'Content-Type': 'application/json'
             }
         });
@@ -94,6 +105,14 @@ class PlayerPool {
      */
 
     static async addToPool(playerToken) {
+        const token = new AdminAuth();
+
+        if (!token) {
+            console.error('[AUTH] Нет токена администратора');
+            window.location.href = '/auth.html';
+            return;
+        }
+
         if (!playerToken) {
             console.error('Токен игрока обязателен для добавления в пул');
             return null;
@@ -107,7 +126,8 @@ class PlayerPool {
             const response = await fetch(`${PlayerPool.BASE_URL}/admin/games/${PlayerPool.gameToken}/pool`, {
                 method: 'POST',
                 headers: {
-                    'X-Admin-API-Key': PlayerPool.adminKey,
+                    'Authorization': `Bearer ${token}`,
+                    // 'X-Admin-API-Key': PlayerPool.adminKey,
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(body)
@@ -149,12 +169,21 @@ class PlayerPool {
                 return;
             }
         }
+
+        const token = new AdminAuth();
+
+        if (!token) {
+            console.error('[AUTH] Нет токена администратора');
+            window.location.href = '/auth.html';
+            return;
+        }
     
         try {
             const response = await fetch(`${PlayerPool.BASE_URL}/admin/games/${PlayerPool.gameToken}/start`, {
                 method: 'POST',
                 headers: {
-                    'X-Admin-API-Key': PlayerPool.adminKey,
+                    'Authorization': `Bearer ${token}`,
+                    // 'X-Admin-API-Key': PlayerPool.adminKey,
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({ session_token: sessionToken })
@@ -183,10 +212,20 @@ class PlayerPool {
      */
     async stopActiveSession() {
         try {
+
+        const token = new AdminAuth();
+
+        if (!token) {
+            console.error('[AUTH] Нет токена администратора');
+            window.location.href = '/auth.html';
+            return;
+        }
+
           const response = await fetch(`${PlayerPool.BASE_URL}/admin/games/${PlayerPool.gameToken}/stop`, {
             method: 'POST',
             headers: {
-              'X-Admin-API-Key': PlayerPool.adminKey,
+                'Authorization': `Bearer ${token}`,
+            //   'X-Admin-API-Key': PlayerPool.adminKey,
               'Content-Type': 'application/json'
             }
           });

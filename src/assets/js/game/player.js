@@ -1,3 +1,5 @@
+import AdminAuth from "../auth/adminAuth.js";
+
 class Player {
     static gameToken = 'gAmEToKeN1';
     static adminKey = 'Q3z8vKp9N2w5R6s1Xy7L';
@@ -128,11 +130,20 @@ class Player {
     * }|null>}
     */
     async sendResultToServer(success, roundNumber) {
+        const token = new AdminAuth();
+
+        if (!token) {
+            console.error('[AUTH] Нет токена администратора');
+            window.location.href = '/auth.html';
+            return;
+        }
+
         const url = `https://gameserver2.kemo.ru/api/games/${Player.gameToken}/session/${this.sessionToken}/submit`;
 
         console.log(`[API] Отправка результата раунда ${roundNumber}:`, {
             success,
-            gameToken: Player.gameToken,
+            'Authorization': `Bearer ${token}`,
+            // gameToken: Player.gameToken,
             sessionToken: this.sessionToken
         });
 
