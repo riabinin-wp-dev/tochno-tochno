@@ -130,7 +130,7 @@ class Player {
     * }|null>}
     */
     async sendResultToServer(success, roundNumber) {
-        const token = new AdminAuth();
+        const token = AdminAuth.getToken();
 
         if (!token) {
             console.error('[AUTH] Нет токена администратора');

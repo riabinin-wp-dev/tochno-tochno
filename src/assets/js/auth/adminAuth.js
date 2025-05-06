@@ -9,10 +9,11 @@ class AdminAuth {
 
         if (!this.form) {
             console.info('[AUTH] Не на странице авторизации. Форма отсутствует.');
-            return; // прерываем инициализацию
+            // return; // прерываем инициализацию
+        }else{
+            this.init();
         }
 
-        this.init();
     }
 
     init() {

@@ -17,14 +17,13 @@ class PlayerPool {
      * @returns 
      */
     async loadPool() {
-        const token = new AdminAuth();
+        const token = AdminAuth.getToken();
 
         if (!token) {
             console.error('[AUTH] Нет токена администратора');
             window.location.href = '/auth.html';
             return;
         }
-
         const response = await fetch(`${PlayerPool.BASE_URL}/admin/games/${PlayerPool.gameToken}/pool?status=started,pending,completed, stopped_by_admin, abandoned`, {
             method: 'GET',
             headers: {
@@ -37,6 +36,7 @@ class PlayerPool {
             console.error('Ошибка загрузки пула');
             return;
         }
+        console.log(response)
         const pool = await response.json();
         this.render(pool);
     }
@@ -105,7 +105,7 @@ class PlayerPool {
      */
 
     static async addToPool(playerToken) {
-        const token = new AdminAuth();
+        const token = AdminAuth.getToken();
 
         if (!token) {
             console.error('[AUTH] Нет токена администратора');
@@ -170,7 +170,7 @@ class PlayerPool {
             }
         }
 
-        const token = new AdminAuth();
+        const token = AdminAuth.getToken();
 
         if (!token) {
             console.error('[AUTH] Нет токена администратора');
@@ -213,7 +213,7 @@ class PlayerPool {
     async stopActiveSession() {
         try {
 
-        const token = new AdminAuth();
+            const token = AdminAuth.getToken();
 
         if (!token) {
             console.error('[AUTH] Нет токена администратора');
