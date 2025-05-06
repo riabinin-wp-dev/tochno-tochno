@@ -44,17 +44,26 @@ class Player {
             player.name = result.data.name;
             player.telegramNick = result.data.telegram_nick;
             player.token = result.data.player_token;
+
+            // Сохраняем игрока в localStorage
+            Player.savePlayerToLocalStorage({
+                badge_id: player.badgeId,
+                name: player.name,
+                player_token: player.token,
+                telegram_nick: player.telegramNick
+            });
+
             console.log('Игрок зарегистрирован:', player);
 
             //ставим в очередь
             const pool = await PlayerPool.addToPool(result.data.player_token);
 
             if (pool && pool.success) {
-                const poolInstance = new PlayerPool(); // или передай заранее, если уже создан
+                const poolInstance = new PlayerPool();
                 await poolInstance.loadPool();
             }
             return player;
-       
+
         } else if (result.data.success == false && result.data.code == 'DUPLICATE_BADGE_ID') {
             console.warn(result.data.message);
             console.log(result);
@@ -64,21 +73,83 @@ class Player {
             // const pool = await PlayerPool.addToPool(playerToken);
 
             // if (pool && pool.success) {
-                // const poolInstance = new PlayerPool(); // или передай заранее, если уже создан
-                // await poolInstance.loadPool();
+            // const poolInstance = new PlayerPool(); 
+            // await poolInstance.loadPool();
             // }
 
             return null;
-            
-        } else if(result.data.code === 'VALIDATION_ERROR'){
+
+        } else if (result.data.code === 'VALIDATION_ERROR') {
             alert('Непройдена валидация' + result.data.details)
             console.warn('🔍 Детали ошибки:', result.data.details);
             return null;
-            
+
         } else {
             alert("Ошибка: " + result.data.message);
             console.warn('Ошибка регистрации:', result.data.message)
             return null;
+        }
+    }
+
+    /**
+     *  Сохраняем игрока в localStorage
+     * @param {*} playerData 
+     */
+    static savePlayerToLocalStorage(playerData) {
+        try {
+            const players = Player.getPlayersFromLocalStorage();
+            const existingPlayerIndex = players.findIndex(p => p.badge_id === playerData.badge_id);
+
+            if (existingPlayerIndex !== -1) {
+                players[existingPlayerIndex] = playerData;
+            } else {
+                players.push(playerData);
+            }
+
+            localStorage.setItem('registeredPlayers', JSON.stringify(players));
+        } catch (error) {
+            console.error('Ошибка при сохранении игрока:', error);
+        }
+    }
+
+    /**
+     * Получаем всех игроков из localStorage
+     * @returns 
+     */
+    static getPlayersFromLocalStorage() {
+        try {
+            const playersJSON = localStorage.getItem('registeredPlayers');
+            return playersJSON ? JSON.parse(playersJSON) : [];
+        } catch (error) {
+            console.error('Ошибка при получении игроков:', error);
+            return [];
+        }
+    }
+
+    /**
+     * Получаем игрока по badge_id
+     * @param {*} badgeId 
+     * @returns 
+     */
+    static getPlayerByBadgeId(badgeId) {
+        const players = Player.getPlayersFromLocalStorage();
+        return players.find(player => player.badge_id === String(badgeId));
+    }
+
+    /**
+     * Удаляем игрока из localStorage по badge_id
+     * @param {*} badgeId 
+     * @returns 
+     */
+    static removePlayerFromLocalStorage(badgeId) {
+        try {
+            const players = Player.getPlayersFromLocalStorage();
+            const updatedPlayers = players.filter(player => player.badge_id !== String(badgeId));
+            localStorage.setItem('registeredPlayers', JSON.stringify(updatedPlayers));
+            return true;
+        } catch (error) {
+            console.error('Ошибка при удалении игрока:', error);
+            return false;
         }
     }
 

@@ -108,7 +108,7 @@ class UIController {
 
         // перезагрузка
         await this.delay(5000);
-        location.reload();
+        // location.reload();
     }
 
 

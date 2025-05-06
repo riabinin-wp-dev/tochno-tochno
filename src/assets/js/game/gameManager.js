@@ -117,12 +117,16 @@ class GameManager {
         this.startNextRound();
     }
 
-
     /**
      * старт раунда
      * @returns 
      */
     async startNextRound() {
+        //заглушка для сервера - неактуально
+        const unswer = await this.player.getNextRound();
+        console.log(unswer);
+        //конец заглушки
+
         await this.ui.prepareSectionForRound();
         const question = await this.data.getRandomQuestion();
         if (!question) {

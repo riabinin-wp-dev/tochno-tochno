@@ -58,58 +58,6 @@ class Player {
     }
 
     /**
-     * отправка на сервер
-     * @param {*} result 
-     */
-    // async sendResultToServer(success, roundNumber, session_token, player_token) {
-    //     console.log('Отправка на сервер', result);
-
-    //     // Здесь будет `fetch('/api/result', { method: 'POST', body: JSON.stringify(result) })`
-    //     const url = `https://gameserver2.kemo.ru/api//games/${Player.gameToken}/session/${sessionToken}/submit`;
-
-    //     try {
-    //         const response = await fetch(url, {
-    //             method: 'POST',
-    //             headers: {
-    //                 'Content-Type': 'application/json',
-    //                 'X-Player-Token': playerToken
-    //             },
-    //             body: JSON.stringify({
-    //                 round_number: roundNumber,
-    //                 payload: {
-    //                     success: success
-    //                 }
-    //             })
-    //         });
-
-    //         const result = await response.json();
-    //         console.log('[API] Ответ на отправку результата:', result);
-
-    //         if (!result.data.success) {
-    //             console.warn('[API] Ошибка при отправке результата:', result.data.message);
-    //             return null;
-    //         }
-
-    //         const { score_change, session_score, outcome, session_status, result_data } = result.data;
-
-    //         // Обновим игрока
-    //         this.player.saveResult({ points: score_change });
-
-    //         // Вернем информацию, если нужно дальше обрабатывать
-    //         return {
-    //             outcome,
-    //             sessionStatus: session_status,
-    //             scoreChange: score_change,
-    //             sessionScore: session_score,
-    //             resultData: result_data
-    //         };
-
-    //     } catch (error) {
-    //         console.error('[API] Ошибка при отправке результата раунда:', error);
-    //         return null;
-    //     }
-    // }
-    /**
     * Отправляет результат раунда на сервер
     * @param {boolean} success - Успешно ли выполнено действие
     * @param {number} roundNumber - Номер раунда
@@ -194,6 +142,62 @@ class Player {
             return null;
         }
     }
+
+      /**
+     * метод для сервера - не актуально, но нужен для правильный работы сервера. 
+     * @returns 
+     */
+      async getNextRound() {
+        const url = `https://gameserver2.kemo.ru/api/games/${Player.gameToken}/session/${this.sessionToken}/next`;
+        
+        console.log(`[API] Запрос следующего раунда для сессии ${this.sessionToken}`);
+    
+        try {
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Player-Token': this.token
+                }
+            });
+    
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+    
+            const result = await response.json();
+            console.log('[API] Ответ сервера:', result);
+    
+            if (!result.data.success) {
+                console.warn('[API] Ошибка в ответе:', result.data.message, 'Code:', result.data.code);
+                
+                // Специальная обработка для завершенных раундов
+                if (result.data.code === 'NO_MORE_ROUNDS') {
+                    return { noMoreRounds: true, message: result.data.message };
+                }
+                
+                return null;
+            }
+    
+            // Форматируем данные для удобства использования
+            return {
+                sessionToken: result.data.session_token,
+                gameToken: result.data.game_token,
+                status: result.data.status,
+                roundNumber: result.data.round_number,
+                gameSpecificData: {
+                    factId: result.data.game_specific_data.fact_id,
+                    text: result.data.game_specific_data.text,
+                    targetTimeMs: result.data.game_specific_data.target_time_ms
+                }
+            };
+    
+        } catch (error) {
+            console.error('[API] Ошибка при запросе следующего раунда:', error);
+            return null;
+        }
+    }
+    
 }
 
 export default Player;
