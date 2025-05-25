@@ -6,6 +6,7 @@ import calculateCurrent from "./calculateCurrent.js";
 import DataManager from "./dataManager.js";
 import Player from "./player.js";
 import UIController from "./UIController.js";
+import Swal from 'sweetalert2';
 
 class GameManager {
 
@@ -88,6 +89,17 @@ class GameManager {
                         this.player.initializePlayer(data.payload);
                         resolve();
                         break;
+                    case 'game_ended':
+                        console.log('[WS] Получено событие game_ended', data.payload);
+                        if (this.player.comparePlayer(data.payload)) {
+                            Swal.fire({
+                                text: 'Игра остановлена администратором',
+                            }).then(() => {
+                                window.location.reload();
+                            });
+                        }
+                        resolve();
+                        break;
 
                     default:
                         console.warn('[WS] Неизвестное событие:', data);
@@ -147,8 +159,11 @@ class GameManager {
 
         this.ui.showRound(this.round, question.counter, question.fact);
         this.counterValues = question.counter;
-        // await this.ui.delay(2000);
-        await this.ui.waitForKeyPress();
+        if(this.round != 1){
+            await this.ui.waitForKeyPress();
+        }else{
+            await this.ui.delay(2000);
+        }
         this.startCounter();
 
         // Ожидаем клик, с таймаутом

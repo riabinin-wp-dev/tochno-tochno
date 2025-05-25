@@ -27,8 +27,8 @@ class PlayerFormHandler {
         if (!badgeId || !name) {
             // alert('ID на бейдже и имя обязательны.');
             Swal.fire({
-                icon: 'warning', // или 'success', 'error', 'warning', 'question'
-                title: 'ID на бейдже и имя обязательны.',
+                // icon: 'warning', // или 'success', 'error', 'warning', 'question'
+                // title: 'ID на бейдже и имя обязательны.',
                 text: 'Необходимо заполнить все поля',
             });
             return;

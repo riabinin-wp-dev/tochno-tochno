@@ -30,6 +30,12 @@ class Player {
         });
     }
 
+    comparePlayer(data){
+        console.log(this.sessionToken)
+        console.log(data.session_token)
+        return this.sessionToken == data.session_token ? true : false;
+    }
+
     /**
      * сохранение результата
      * @param {*} result 
