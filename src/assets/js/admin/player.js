@@ -1,4 +1,5 @@
 import PlayerPool from "./sessionPool.js";
+import Swal from 'sweetalert2';
 
 /**
  * класс профиля игрока
@@ -67,7 +68,13 @@ class Player {
         } else if (result.data.success == false && result.data.code == 'DUPLICATE_BADGE_ID') {
             console.warn(result.data.message);
             console.log(result);
-            alert('Ошибка: ' + result.data.message);
+            // alert('Ошибка: ' + result.data.message);
+
+            Swal.fire({
+                // icon: 'error', // или 'success', 'error', 'warning', 'question'
+                // title: 'Ошибка',
+                text: result.data.message,
+            });
 
             //ставим в очередь
             // const pool = await PlayerPool.addToPool(playerToken);
@@ -80,12 +87,22 @@ class Player {
             return null;
 
         } else if (result.data.code === 'VALIDATION_ERROR') {
-            alert('Непройдена валидация' + result.data.details)
+            // alert('Непройдена валидация' + result.data.details)
+             Swal.fire({
+                icon: 'error', // или 'success', 'error', 'warning', 'question'
+                title: 'Непройдена валидация',
+                text: result.data.message,
+            });
             console.warn('🔍 Детали ошибки:', result.data.details);
             return null;
 
         } else {
-            alert("Ошибка: " + result.data.message);
+            // alert("Ошибка: " + result.data.message);
+              Swal.fire({
+                icon: 'error', // или 'success', 'error', 'warning', 'question'
+                title: 'Ошибка',
+                text: result.data.message,
+            });
             console.warn('Ошибка регистрации:', result.data.message)
             return null;
         }

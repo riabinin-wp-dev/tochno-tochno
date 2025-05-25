@@ -16,6 +16,7 @@
     <meta name="robots" content="index, follow">
     <meta name="google" content="notranslate">
     <meta name="format-detection" content="telephone=no">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <title>Админ панель</title>
     
     
@@ -36,7 +37,7 @@
 <body>
     <div class="page">
 
-        <main class="main">
+        <main class="main" style="opacity: 1; visibility: visible;">
             
             
             <section class="admin" style="background-image: url(./assets/images/admin/Effects.png);">
@@ -58,93 +59,10 @@
                                 </li>
                             </ul>
                             <ul id="admin_container" class="admin_container">
-                                <!-- <li class="wait">
-                                    <span>157</span>
-                                    <span>1467</span>
-                                    <span>Максим</span>
-                                    <div class="control">
-                                        <span>Очередь 5</span>
-                                        <button type="button" class="start"></button>
-                                    </div>
-                                </li>
-                                <li class="active">
-                                    <span>157</span>
-                                    <span>1467</span>
-                                    <span>Максим</span>
-                                    <div class="control">
-                                        <span>Идёт игра</span>
-                                        <button type="button" class="stop"></button>
-                                    </div>
-                                </li>
-                                <li>
-                                    <span>157</span>
-                                    <span>1467</span>
-                                    <span>Сергей</span>
-                                    <div class="control">
-                                        <span class="coin">500</span>
-                                        <span class="time">11:28</span>
-                                    </div>
-                                </li>   
-                                <li>
-                                    <span>157</span>
-                                    <span>1467</span>
-                                    <span>Татьяна</span>
-                                    <div class="control">
-                                        <span class="coin">500</span>
-                                        <button type="button" class="stop"></button>
-                                    </div>
-                                </li>  
-                                 <li  class="enqueue">
-                                    <span>157</span>
-                                    <span>1467</span>
-                                    <span>Максим</span>
-                                    <div class="control">
-                                        <span class="coin">500</span>
-                                        <span class="time">11:28</span>
-                                    </div>
-                                </li>  <li  class="enqueue">
-                                    <span>157</span>
-                                    <span>1467</span>
-                                    <span>Максим</span>
-                                    <div class="control">
-                                        <span class="coin">500</span>
-                                        <span class="time">11:28</span>
-                                    </div>
-                                </li>
-                
-                                <li class="reset">
-                                    <span>
-                                        <a href="">
-                                            Сбросить результаты поиска
-                                        </a>
-                                    </span>
-                                </li> -->
                             </ul>
                         </div>
             
                         <aside>
-                            <form action="" class="admin_form_add">
-                                <h3 class="admin_form_title">Новый игрок</h3>
-                                <label for="player_id" class="admin_label">
-                                    <img src="./assets/images/admin/Icon/Calendar.svg" alt="">
-                                    <input type="text" name="player_id" id="player_id" placeholder="ID на бейдже">
-                                </label>
-            
-                                <label for="player_name" class="admin_label">
-                                    <img src="./assets/images/admin/Icon/Profile.svg" alt="">
-                                    <input type="text" name="player_name" id="player_name" placeholder="Имя">
-                                </label>
-            
-                                <label for="player_telegram" class="admin_label">
-                                    <img src="./assets/images/admin/Icon/chat.svg" alt="" class="telegram">
-                                    <input type="text" name="player_telegram" id="player_telegram" placeholder="Телеграм">
-                                </label>
-            
-                                <button type="submit" class="admin_submit">
-                                    Добавить
-                                </button>
-                            </form>
-            
                             <form action="" class="admin_form_search">
                                 <h3 class="admin_form_title">Поиск по списку</h3>
                                 <label for="search_player_id" class="admin_label">
@@ -155,6 +73,31 @@
                                     Найти
                                 </button>
                             </form>
+            
+            
+                            <form action="" class="admin_form_add">
+                                <h3 class="admin_form_title" data-register style="cursor: pointer;">Новый игрок</h3>
+                                <label for="player_id" class="admin_label" data-form>
+                                    <img src="./assets/images/admin/Icon/Calendar.svg" alt="">
+                                    <input type="text" name="player_id" id="player_id" placeholder="ID на бейдже">
+                                </label>
+            
+                                <label for="player_name" class="admin_label" data-form>
+                                    <img src="./assets/images/admin/Icon/Profile.svg" alt="">
+                                    <input type="text" name="player_name" id="player_name" placeholder="Имя">
+                                </label>
+            
+                                <label for="player_telegram" class="admin_label" data-form>
+                                    <img src="./assets/images/admin/Icon/chat.svg" alt="" class="telegram">
+                                    <input type="text" name="player_telegram" id="player_telegram" placeholder="Телеграм">
+                                </label>
+            
+                                <button type="submit" class="admin_submit" data-form>
+                                    Добавить
+                                </button>
+                            </form>
+            
+            
                         </aside>
                     </div>
                 </div>
@@ -162,6 +105,7 @@
         </main>
 
     </div>
+    <script src="assets/js/common.js"></script>
     <script src="assets/js/admin.js"></script>
 </body>
 </html>

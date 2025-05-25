@@ -23,12 +23,12 @@ document.addEventListener('DOMContentLoaded', () => {
       const session_token = target.closest('.control')?.dataset?.session;
       await playerPoll.startSession(session_token);
 
-    //стоп
+      //стоп
     } else if (target.classList.contains('stop')) {
       await playerPoll.stopActiveSession();
-    
+
       //сброс результатов
-    }else if (target.classList.contains('reset')){
+    } else if (target.classList.contains('reset')) {
       playerPoll.loadPool();
     }
 
@@ -40,4 +40,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
   });
 
+});
+jQuery(document).ready(function ($) {
+  const $form = $('[data-form]');
+  const $toggle = $('[data-register]');
+
+  // Скрываем форму при загрузке
+  $form.hide();
+
+  // По клику по "Регистрация" — переключаем видимость формы
+  $toggle.on('click', function () {
+    $form.slideToggle(300); // Плавное скрытие/показ
+  });
 });

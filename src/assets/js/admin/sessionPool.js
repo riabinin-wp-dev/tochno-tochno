@@ -1,4 +1,5 @@
 import AdminAuth from "../auth/adminAuth.js";
+import Swal from 'sweetalert2';
 
 class PlayerPool {
     static BASE_URL = 'https://gameserver2.kemo.ru/api';
@@ -13,6 +14,7 @@ class PlayerPool {
         this.loadPool();
         this.ws = null;
         this.sessionActive = false;
+        this.startOnHover();
     }
 
     /**
@@ -62,15 +64,46 @@ class PlayerPool {
         ];
 
         // Сортируем сессии согласно нашему порядку
-        const sortedSessions = [...pool.data.sessions].sort((a, b) => {
-            const aIndex = statusOrder.indexOf(a.status);
-            const bIndex = statusOrder.indexOf(b.status);
+        // const sortedSessions = [...pool.data.sessions].sort((a, b) => {
+        //     const aIndex = statusOrder.indexOf(a.status);
+        //     const bIndex = statusOrder.indexOf(b.status);
 
-            // Если статус не указан в порядке - ставим в конец
-            return (aIndex === -1 ? Infinity : aIndex) - (bIndex === -1 ? Infinity : bIndex);
-        });
+        //     // Если статус не указан в порядке - ставим в конец
+        //     return (aIndex === -1 ? Infinity : aIndex) - (bIndex === -1 ? Infinity : bIndex);
+        // });
+        const sessions = [...pool.data.sessions];
 
-        console.log('Отсортированные сессии:', sortedSessions);
+        // Сортировка от старых к новым (по возрастанию времени)
+        const sortByStartedAtAsc = (a, b) => {
+            const aTime = new Date(a.started_at).getTime();
+            const bTime = new Date(b.started_at).getTime();
+            return aTime - bTime; // меньшее время — раньше
+        };
+
+        // Сортировка от новых к старым (по убыванию времени)
+        const sortByStartedAtDesc = (a, b) => {
+            const aTime = new Date(a.started_at).getTime();
+            const bTime = new Date(b.started_at).getTime();
+            return bTime - aTime; // большее время — раньше в списке
+        };
+
+        // Выбираем сессии "started" и сортируем от старых к новым
+        const startedSessions = sessions
+            .filter(session => session.status === 'pending')
+            .sort(sortByStartedAtAsc);
+
+        // Выбираем остальные сессии и сортируем от новых к старым
+        const otherSessions = sessions
+            .filter(session => session.status !== 'pending')
+            .sort(sortByStartedAtDesc);
+
+        // Объединяем массивы: сначала started, потом остальные
+        const sortedSessions = [...startedSessions, ...otherSessions];
+
+
+
+
+        // console.log('Отсортированные сессии:', sortedSessions);
 
         // Рендерим отсортированный список
         sortedSessions.forEach((session, index) => {
@@ -79,6 +112,7 @@ class PlayerPool {
             const hours = date.getHours();
             const minutes = date.getMinutes();
             const formattedTime = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+            // console.log(session)
 
             let controls = '';
 
@@ -90,7 +124,7 @@ class PlayerPool {
                         </div>`;
             } else if (session.status == 'completed') {
                 controls = `<div class="control" data-session=${session.session_token}>
-                            <span class="coin">coin</span>
+                            <span class="coin">${session.best_session_score}</span>
                             <span class="time">${formattedTime}</span>
                         </div>`;
             } else if (session.status == 'started') {
@@ -100,7 +134,7 @@ class PlayerPool {
                         </div>`;
             } else if (session.status == 'stopped_by_admin') {
                 controls = `<div class="control" data-session=${session.session_token}>
-                            <span class="coin">coin</span>
+                            <span class="coin">${session.best_session_score}</span>
                             <span class="time">${formattedTime}</span>
                         </div>`;
             }
@@ -155,12 +189,23 @@ class PlayerPool {
             const data = await response.json();
 
             if (!data?.data?.success) {
-                console.warn('Не удалось добавить в пул:', data.data.message);
+                // console.warn('Не удалось добавить в пул:', data.data.message);
+                 Swal.fire({
+                // icon: 'error', // или 'success', 'error', 'warning', 'question'
+                title: 'Не удалось добавить в пул:',
+                text: data.data.message,
+            });
                 return data.data; // Вернём, чтобы можно было проверить код ошибки (например, ALREADY_IN_POOL_OR_ACTIVE)
             }
 
             console.log('Игрок успешно добавлен в пул:', data.data);
-            alert(data.data.message)
+            // alert(data.data.message)
+            Swal.fire({
+                // icon: 'info', // или 'success', 'error', 'warning', 'question'
+                // title: 'Уведомление',
+                text: data.data.message,
+            });
+
             return data.data; // Включает session_token и прочее
 
         } catch (error) {
@@ -211,8 +256,13 @@ class PlayerPool {
             const data = await response.json();
 
             if (data?.data?.success) {
+                Swal.fire({
+                    // icon: 'info', // или 'success', 'error', 'warning', 'question'
+                    // title: 'Уведомление',
+                    text: data.data.message,
+                });
                 console.log('Сессия успешно запущена:', data.data.message);
-                alert(data.data.message);
+                // alert(data.data.message);
                 // Обновим список после запуска 
                 await this.loadPool();
                 // 3. Запускаем WebSocket соединение
@@ -221,7 +271,13 @@ class PlayerPool {
                 return data.data;
             } else {
                 console.warn('Ошибка запуска сессии:', data.data.message);
-                alert(data.data.message);
+                Swal.fire({
+                    // icon: 'info', // или 'success', 'error', 'warning', 'question'
+                    // title: 'Уведомление',
+                    text: data.data.message,
+                });
+
+                // alert(data.data.message);
                 return data.data;
             }
         } catch (error) {
@@ -256,7 +312,14 @@ class PlayerPool {
             const data = await response.json();
 
             if (response.ok && data?.data?.success) {
-                alert('Сессия остановлена администратором');
+                // alert('Сессия остановлена администратором');
+
+                Swal.fire({
+                    // icon: 'info', // или 'success', 'error', 'warning', 'question'
+                    // title: 'Уведомление',
+                    text: 'Сессия остановлена администратором',
+                });
+
                 console.log(data.data.message);
                 await this.loadPool();
             } else {
@@ -281,8 +344,8 @@ class PlayerPool {
             console.log('[WS] Подключаемся к:', wsUrl);
 
             const authPayload = {
-                token: AdminAuth.getToken(), 
-                admin_key: PlayerPool.adminKey 
+                token: AdminAuth.getToken(),
+                admin_key: PlayerPool.adminKey
             };
 
             this.ws.onopen = () => {
@@ -316,7 +379,12 @@ class PlayerPool {
                     case 'game_completed':
                         this.handleGameCompleted(data.payload);
                         this.loadPool();
-                        alert('Игра была завершена')
+                        // alert('Игра была завершена')
+                        Swal.fire({
+                            // icon: 'info', // или 'success', 'error', 'warning', 'question'
+                            // title: 'Уведомление',
+                            text: 'Игра была завершена',
+                        });
                         break;
 
                     default:
@@ -366,32 +434,43 @@ class PlayerPool {
         this.sessionActive = false;
     }
 
+    /**
+     * добавление в пул по кнопке
+     */
+    startOnHover() {
+        document.addEventListener('click', async (event) => {
+            const li = event.target.closest('li[data-status]');
+            if (!li) return;
 
+            // Если клик по кнопке — выходим, не мешаем
+            if (event.target.closest('button')) return;
 
-    // setupControls() {
-    //     this.container.querySelectorAll('.start').forEach(btn => {
-    //         btn.addEventListener('click', () => {
-    //             const sessionToken = btn.dataset.session;
-    //             this.startSession(sessionToken);
-    //         });
-    //     });
-    // }
+            const token = li.dataset.token;
+            console.log('Клик по LI, token:', token);
 
-    // async startSession(sessionToken) {
-    //     const response = await fetch(`/admin/games/${this.gameToken}/start`, {
-    //         method: 'POST',
-    //         headers: {
-    //             'Content-Type': 'application/json'
-    //         },
-    //         body: JSON.stringify({ session_token: sessionToken })
-    //     });
-    //     if (response.ok) {
-    //         alert('Сессия запущена');
-    //         this.loadPool(); // обновим список
-    //     } else {
-    //         alert('Ошибка запуска сессии');
-    //     }
-    // }
+            // Показываем SweetAlert2 с подтверждением
+            const result = await Swal.fire({
+                // title: 'Добавить в пул?',
+                text: 'Вы уверены, что хотите добавить этого игрока в пул?',
+                // icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Да',
+                cancelButtonText: 'Отмена',
+            });
+
+            // Если пользователь подтвердил
+            if (result.isConfirmed) {
+                try {
+                    const addResult = await PlayerPool.addToPool(token);
+                    // console.log('Результат:', addResult);
+                    this.loadPool();
+                } catch (err) {
+                    console.error('Ошибка при добавлении в пул:', err);
+                    await Swal.fire('Ошибка', 'Не удалось добавить игрока в пул.', 'error');
+                }
+            }
+        });
+    }
 
 
 }

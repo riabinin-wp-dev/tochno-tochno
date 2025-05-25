@@ -113,7 +113,7 @@ class GameManager {
      * старт основной фазы игры
      */
     async startGame() {
-        await this.data.loadQuestions();
+        // await this.data.loadQuestions();
         this.startNextRound();
     }
 
@@ -123,12 +123,20 @@ class GameManager {
      */
     async startNextRound() {
         //заглушка для сервера - неактуально
-        const unswer = await this.player.getNextRound();
-        console.log(unswer);
+        const answer = await this.player.getNextRound();
+        //    await  console.log(answer.gameSpecificData.text.fact);
+        //    await  console.log(answer.gameSpecificData.text.counter);
+        const question = await answer.gameSpecificData.text;
+
+        // console.log(answer.data.data.game_specific_data.text.fact);
         //конец заглушки
 
         await this.ui.prepareSectionForRound();
-        const question = await this.data.getRandomQuestion();
+        // const question = await this.data.getRandomQuestion();
+        // console.log(question);
+        // question.counter = await this.data.calculateInitialCurrents(question.counter);
+        // console.log(question.counter);
+
         if (!question) {
             alert('вопрос отсутствует');
             return;
@@ -139,11 +147,12 @@ class GameManager {
 
         this.ui.showRound(this.round, question.counter, question.fact);
         this.counterValues = question.counter;
-
+        // await this.ui.delay(2000);
+        await this.ui.waitForKeyPress();
         this.startCounter();
 
         // Ожидаем клик, с таймаутом
-        const timeout = 30000; 
+        const timeout = 20000;
         const clickPromise = this.ui.waitForClick();
         const timeoutPromise = new Promise(resolve => setTimeout(() => resolve('timeout'), timeout));
 
@@ -177,13 +186,13 @@ class GameManager {
         const isCorrect = this.checkText();
 
         const result = {
-            points: isCorrect ? 300 : 0,
+            points: isCorrect ? 5 : 0,
             success: isCorrect,
             round: this.round
         };
 
-        this.player.saveResult(result);
-        this.player.sendResultToServer?.(isCorrect, result.round); 
+        // this.player.saveResult(result);
+        this.player.sendResultToServer?.(isCorrect, result.round);
 
         if (isCorrect) {
             this.failedAttempts = 0;
@@ -205,7 +214,7 @@ class GameManager {
    */
     async handleSuccess() {
         const result = {
-            points: 300,
+            points: 5,
             success: true,
             round: this.round
         };

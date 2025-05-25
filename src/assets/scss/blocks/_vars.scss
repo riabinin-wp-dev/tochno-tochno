@@ -20,4 +20,11 @@
   }
 
   $mobilever: 5.38;
-  $mobilehor : 10.80
+  $mobilehor : 10.80;
+
+  @media (max-width:992px){
+:root{
+      --content-width: 100vw;
+
+}
+  }

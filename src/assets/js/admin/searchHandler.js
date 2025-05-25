@@ -1,4 +1,6 @@
 import Player from "./player.js";
+import PlayerPool from "./sessionPool.js";
+import Swal from 'sweetalert2';
 
 /**
  * поиск игрока
@@ -15,7 +17,12 @@ class PlayerSearchHandler {
         const badgeId = this.form.querySelector('#search_player_id')?.value.trim();
 
         if (!badgeId) {
-            alert('ID на бейдже обязателен.');
+            // alert('ID на бейдже обязателен.');
+            Swal.fire({
+                icon: 'warning', // или 'success', 'error', 'warning', 'question'
+                title: 'Предупреждение',
+                text: `ID на бейдже обязателен.`,
+            });
             return;
         }
 
@@ -42,7 +49,35 @@ class PlayerSearchHandler {
             });
 
             if (!found) {
-                alert('Игрок найден, но элемент в списке не отображён.');
+                // alert('Игрок найден, но элемент в списке не отображён.');
+                console.log(player.data.player)
+                const name = player.data.player.name;
+                const player_token = player.data.player.player_token;
+
+                const shouldReRegister = await Swal.fire({
+                    title: 'Вопрос',
+                    text: `Игрок "${name}" найден в базе.\nХотите встать в очередь?`,
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Да',
+                    cancelButtonText: 'Отмена',
+                });
+
+
+                if (shouldReRegister) {
+                    try {
+                        const addResult = await PlayerPool.addToPool(player_token);
+                        console.log('Результат добавления в пул:', addResult);
+
+                        // 2. Загружаем обновленный пул
+                        const poolInstance = new PlayerPool();
+                        await poolInstance.loadPool();
+                    } catch (error) {
+                        console.error('Ошибка в цепочке добавления игрока:', error);
+                        throw error; // Пробрасываем ошибку дальше или обрабатываем
+                    }
+                }
+
                 submitButton.disabled = false;
                 submitButton.textContent = 'Найти';
                 return;
@@ -58,10 +93,22 @@ class PlayerSearchHandler {
             }
 
         } else if (player.data.success === true && player.data.exists === false) {
-            alert('Игрок с таким badge_id не найден.');
+            // alert('Игрок с таким badge_id не найден.');
+            Swal.fire({
+                icon: 'warning', // или 'success', 'error', 'warning', 'question'
+                title: 'Игрок с таким badge_id не найден.',
+                text: player.data.message,
+            });
+
         } else {
-            alert("Ошибка: " + player.data.message);
+            // alert("Ошибка: " + player.data.message);
             console.warn(player);
+
+              Swal.fire({
+                icon: 'error', // или 'success', 'error', 'warning', 'question'
+                title: 'Ошибка',
+                text: player.data.message,
+            });
         }
 
         this.form.reset();

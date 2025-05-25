@@ -11,42 +11,56 @@
 .wrong {
     background-image: url('../images/Color=Red.png');
 }
-.wrong .round_result span{
+
+.wrong .round_result span {
     color: red !important;
 }
-.round{
+
+.round {
     transition: all 0.3s linear;
     position: relative;
 }
 
-.z-index{
+.z-index {
     position: relative;
     z-index: 3;
 }
 
-.round_blick, .round_blick_image{
+.round_blick,
+.round_blick_image {
     position: absolute;
-    z-index: 0;inset: 0;
+    z-index: 0;
+    inset: 0;
     object-fit: cover;
     object-position: center;
 }
 
-.round_blick_image{
+.round_blick_image {
     width: 100%;
     height: 100vh;
     transition: all 0.1s linear;
-    
-    &.hide{
+
+    &.hide {
         opacity: 0;
     }
-    &.blick{
+
+    &.blick {
         animation: blink 1s infinite;
     }
 }
+
 @keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
 }
+
 .vertical .round {
     padding: calc(64 / $mobilever * 1vw) calc(48 / $mobilever * 1vw);
 
@@ -105,9 +119,9 @@
         height: calc(120 / $mobilever * 1vw);
         width: calc(64 / $mobilever * 1vw);
 
-        &:nth-child(3) {
-            margin-right: calc(8 / $mobilever * 1vw);
-        }
+        // &:nth-child(3) {
+        //     margin-right: calc(8 / $mobilever * 1vw);
+        // }
     }
 
     & .shadow {
@@ -225,7 +239,7 @@
             letter-spacing: -0.02em;
             color: #fff;
 
-            &:not(:last-child){
+            &:not(:last-child) {
                 margin-bottom: calc(12 / $mobilever * 1vw);
             }
         }
@@ -291,9 +305,9 @@
         height: calc(120 / $mobilehor * 1vh);
         width: calc(64 / $mobilehor * 1vh);
 
-        &:nth-child(3) {
-            margin-right: calc(8 / $mobilehor * 1vh);
-        }
+        // &:nth-child(3) {
+        //     margin-right: calc(8 / $mobilehor * 1vh);
+        // }
     }
 
     & .shadow {
@@ -411,10 +425,28 @@
             letter-spacing: -0.02em;
             color: #fff;
 
-            &:not(:last-child){
+            &:not(:last-child) {
                 margin-bottom: calc(12 / $mobilehor * 1vh);
             }
         }
     }
 
+}
+
+.digit-container:has(.shadow:not(.red):not(.green):not(.grey)) .shadow:not(.red):not(.green):not(.grey) {
+    opacity: 0;
+}
+
+
+.round.blur {
+    transition: all 0.1s linear;
+    &>* {
+        opacity: 0;
+        transition: all 0.1s linear;
+
+    }
+}
+
+.digit-container:not(:has(.shadow)) {
+    opacity: 0;
 }

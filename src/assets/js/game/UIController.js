@@ -1,3 +1,5 @@
+// import Swal from 'sweetalert2';
+
 class UIController {
 
     constructor() {
@@ -10,29 +12,39 @@ class UIController {
         this.roundResult = this.roundEl.querySelector('.round_result');
         this.roundResultTotal = this.roundEl.querySelector('.round_reult_text');
         this.roundFinish = this.roundEl.querySelector('.round_finish');
+        this.main = document.querySelector('main');
     }
 
     /**
      * подготовка секции к райнду
      */
     prepareSectionForRound() {
+        this.roundEl.classList.add('blur');
         if (this.roundTarget.classList.contains('winner')) {
             this.roundTarget.classList.remove('winner');
         }
         this.hideElement([this.roundCoinInfo, this.roundResult, this.roundResultTotal, this.roundFinish]);
         this.showElement([this.roundStatus, this.roundTarget, this.counterContainer, this.roundInfo]);
+        setTimeout(() => {
+            this.roundEl.classList.remove('blur');
+        }, 800);
     }
 
     /**
      * скрываем элементы 
      * @param {*} elements - массив элементов
      */
+    // hideElement(elements) {
+    //     elements.forEach(el => {
+    //         el.classList.add('slide-hidden');
+    //         setTimeout(() => {
+    //             el.classList.add('none');
+    //         }, this.animationTime);
+    //     });
+    // }
     hideElement(elements) {
-        elements.forEach(el => {
-            el.classList.add('slide-hidden');
-            setTimeout(() => {
-                el.classList.add('none');
-            }, this.animationTime);
+        $(elements).each(function () {
+            $(this).hide();
         });
     }
 
@@ -40,12 +52,17 @@ class UIController {
     * показываем элементы 
     * @param {*} elements - массив элементов
     */
+    // showElement(elements) {
+    //     elements.forEach(el => {
+    //         el.classList.remove('none');
+    //         setTimeout(() => {
+    //             el.classList.remove('slide-hidden');
+    //         }, 10);
+    //     });
+    // }
     showElement(elements) {
-        elements.forEach(el => {
-            el.classList.remove('none');
-            setTimeout(() => {
-                el.classList.remove('slide-hidden');
-            }, 10);
+        $(elements).each(function () {
+            $(this).show();
         });
     }
     /**
@@ -85,30 +102,55 @@ class UIController {
      * 
      * @param {*} counterArr 
      */
+    // updateCounter(counterArr) {
+    //     console.log(counterArr);
+    //     this.counterContainer.innerHTML = counterArr.map((c, i, arr) => `
+    //         <div class="digit-container">
+    //             ${c.alfabet[c.current]}
+    //             <div class="shadow ${i === arr.length - 1 ? 'green' : 'grey'}"></div>
+    //         </div>
+    //     `).join('');
+    // }
     updateCounter(counterArr) {
-        this.counterContainer.innerHTML = counterArr.map((c, i, arr) => `
+        // Список исключений для последнего элемента
+        const lastItemExceptions = ['млн', 'лет', '%'];
+
+        this.counterContainer.innerHTML = counterArr.map((c, i, arr) => {
+            const isLastItem = i === arr.length - 1;
+            const currentValue = c.alfabet[c.current];
+            const isException = isLastItem && lastItemExceptions.includes(currentValue);
+
+            // Для исключений не добавляем цветной класс
+            const shadowClass = isException ? '' : (isLastItem ? 'green' : 'grey');
+
+            return `
             <div class="digit-container">
-                ${c.alfabet[c.current]}
-                <div class="shadow ${i === arr.length - 1 ? 'green' : 'grey'}"></div>
+                ${currentValue ?? '?'}
+                ${shadowClass ? `<div class="shadow ${shadowClass}"></div>` : ''}
             </div>
-        `).join('');
+        `;
+        }).join('');
     }
 
     /**
      * обработка три неудачи подряд
      */
     async showTooManyFails() {
+        this.main.classList.remove('active');
+        await this.delay(300);
+
         this.roundEl.classList.add('default');
         this.roundTarget.innerHTML = 'Мы так и знали, что Баромир справится лучше тебя!';
         this.roundResultTotal.innerHTML = '<p>Но приходи позже и попробуй ещё раз!</p>'
 
         this.hideElement([this.roundStatus.parentElement, this.roundCoinInfo, this.counterContainer, this.roundResult, this.roundInfo]);
-        await this.delay(500);
         this.showElement([this.roundFinish, this.roundResultTotal]);
+        await this.delay(500);
+        this.main.classList.add('active');
 
         // перезагрузка
         await this.delay(5000);
-        // location.reload();
+        location.reload();
     }
 
 
@@ -119,19 +161,45 @@ class UIController {
      * @param {*}  name имя для первой секции отображать 
      */
     showSection(id, idNew, name = '') {
-
-        if (name !== '') {
-            document.querySelector('[data-name]').textContent = name;
-        }
-
-        const section = document.getElementById(id);
-        section.classList.remove('active');
-        setTimeout(() => section.classList.add('none'), 300);
-
-        const next = document.getElementById(idNew);
-        next.classList.remove('none');
-        setTimeout(() => next.classList.add('active'), 10);
+        this.main.classList.remove('active');
+        setTimeout(() => {
+            if (name !== '') {
+                document.querySelector('[data-name]').textContent = name;
+            }
+            const section = document.getElementById(id);
+            const next = document.getElementById(idNew);
+            section.classList.remove('active');
+            section.classList.add('none')
+            next.classList.remove('none');
+            next.classList.add('active')
+            setTimeout(() => {
+                this.main.classList.add('active')
+            }, 200);
+        }, 200);
     }
+    // showSection(id, idNew, name = '') {
+    //     // Устанавливаем имя если передано
+    //     if (name !== '') {
+    //         $('[data-name]').text(name);
+    //     }
+
+    //     // Скрываем текущую секцию
+    //     $('#' + id)
+    //         .hide()
+    //         .removeClass('active')
+    //         .addClass('none');
+
+    //     // Показываем новую секцию
+    //     $('#' + idNew)
+    //         .addClass('blur')
+    //         .show()
+    //         .removeClass('none')
+    //         .addClass('active');
+
+    //     setTimeout(() => {
+    //         $('#' + idNew).removeClass('blur');
+    //     }, 300);
+    // }
 
     /**
     * таймер обратного отсчета
@@ -159,7 +227,10 @@ class UIController {
 
 
         //продублируем время для анимаации
-        await this.delay(1000)
+        await this.delay(300)
+        this.main.classList.remove('active');
+
+        document.getElementById('backtimer').classList.add('blur');
     }
 
     /**
@@ -188,24 +259,37 @@ class UIController {
 
         // Формируем строку цели
         const target = counterArr.map(c => c.alfabet[c.target]).join('');
-        this.roundTarget.innerHTML = `ПОЙМАЙ ${target}`;
+        const formattedTarget = target.replace(/([A-Za-zА-Яа-яЁё])/u, ' $1');
+        this.roundTarget.innerHTML = `ПОЙМАЙ ${formattedTarget}`;
         this.roundInfo.innerHTML = fact;
 
         // Очищаем и показываем контейнер для счётчика
         this.counterContainer.innerHTML = '';
         this.counterContainer.style.display = 'flex';
 
+        // Список исключений для последнего элемента
+        const lastItemExceptions = ['млн', 'лет', '%'];
+
         counterArr.forEach((digit, i) => {
             const digitContainer = document.createElement('div');
             digitContainer.classList.add('digit-container');
             const safeIndex = typeof digit.current === 'number' ? digit.current : 0;
-            digitContainer.textContent = digit.alfabet[safeIndex] ?? '?';
+            const currentValue = digit.alfabet[safeIndex] ?? '?';
+            digitContainer.textContent = currentValue;
 
+            const isLastItem = i === counterArr.length - 1;
+            const isException = isLastItem && lastItemExceptions.includes(currentValue);
+
+            // Всегда создаем shadow элемент
             const shadow = document.createElement('div');
             shadow.classList.add('shadow');
-            shadow.classList.add(i === counterArr.length - 1 ? 'green' : 'grey');
 
-            digitContainer.appendChild(shadow);
+            // Добавляем цветной класс только если это не исключение
+            if (!isException) {
+                shadow.classList.add(isLastItem ? 'green' : 'grey');
+                digitContainer.appendChild(shadow);
+            }
+            
             this.counterContainer.appendChild(digitContainer);
         });
     }
@@ -302,7 +386,7 @@ class UIController {
                 img.classList.add('coin-piece');
 
                 const startX = Math.random() * window.innerWidth;
-                const delay = Math.random() * 1000; 
+                const delay = Math.random() * 1000;
 
                 img.style.left = `${startX}px`;
                 img.style.top = `-50px`;
@@ -341,18 +425,22 @@ class UIController {
      * @param {*} scope 
      */
     async showEnd(scope) {
+        this.main.classList.remove('active');
+        await this.delay(300);
+
         this.roundEl.classList.add('default');
         this.roundTarget.innerHTML = 'Игра закончилась, <br> на твоём счету:';
         this.roundCoinInfo.querySelector('span').textContent = scope;
 
         this.hideElement([this.roundStatus.parentElement, this.counterContainer, this.roundResult, this.roundInfo]);
-        await this.delay(500);
         this.showElement([this.roundCoinInfo, this.roundResultTotal, this.roundFinish]);
+        await this.delay(300);
+        this.main.classList.add('active');
 
 
         // перезагрузка
         await this.delay(5000);
-        // location.reload();
+        location.reload();
 
     }
 }

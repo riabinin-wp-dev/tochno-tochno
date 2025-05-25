@@ -22,7 +22,7 @@ import imagemin from 'gulp-imagemin'; // Импортируем оптимиза
 import mozjpeg from 'imagemin-mozjpeg'; // Импортируем плагин для jpeg
 import optipng from 'imagemin-optipng'; // Импортируем плагин для png
 import svgo from 'imagemin-svgo'; // Импортируем плагин для svg
-import debug from 'gulp-debug'; // Импортируем gulp-debug
+// import debug from 'gulp-debug'; // Импортируем gulp-debug
 
 /* Установка компилятора для gulp-sass */
 const sass = gulpSass(sassCompiler);
@@ -291,11 +291,11 @@ gulp.task('fonts', () => {
         encoding: false, // Important!
         removeBOM: false,
     })
-    .pipe(debug({ title: 'Before ttf2woff2:' }))
+    // .pipe(debug({ title: 'Before ttf2woff2:' }))
     .pipe(ttf2woff2())
-    .pipe(debug({ title: 'After ttf2woff2:' }))
+    // .pipe(debug({ title: 'After ttf2woff2:' }))
     .pipe(gulp.dest(path.build.fonts))
-    .pipe(debug({ title: 'After dest:' }))
+    // .pipe(debug({ title: 'After dest:' }))
     .pipe(browserSync.reload({ stream: true }));
 });
 

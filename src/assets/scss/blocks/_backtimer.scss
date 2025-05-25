@@ -161,3 +161,9 @@
         // margin-top: calc(170 / $mobilehor * 1vh);
     }
 }
+
+.backtimer.blur{
+    & > *{
+        opacity: 0;
+    }
+}
