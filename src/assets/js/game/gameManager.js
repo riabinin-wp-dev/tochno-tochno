@@ -2,7 +2,6 @@
  * Менеджер управлеия игры
  */
 
-import calculateCurrent from "./calculateCurrent.js";
 import DataManager from "./dataManager.js";
 import Player from "./player.js";
 import UIController from "./UIController.js";
@@ -18,6 +17,7 @@ class GameManager {
         this.maxRounds = 3;
         this.failedAttempts = 0;
         this.maxFails = 3;
+        this.socketStarted = false;
 
         this.started = false;
 
@@ -33,7 +33,8 @@ class GameManager {
     async init() {
         // /первый экран
         await this.connectWebSocket();
-        this.ui.showSection('start', 'hello', this.player.getName());
+        this.ui.delay(1500)
+        this.ui.showSection('start', 'hello', this.player.getName());   
 
         //второй экран
         await this.ui.waitForKeyPress();
@@ -53,7 +54,8 @@ class GameManager {
      */
     connectWebSocket() {
         return new Promise((resolve, reject) => {
-            const wsUrl = `wss://gameserver2.kemo.ru/ws?game_token=${GameManager.gameToken}`;
+            // const wsUrl = `wss://gameserver2.kemo.ru/ws?game_token=${GameManager.gameToken}`;
+            const wsUrl = `wss://cf.2gis.ru/ws?game_token=${GameManager.gameToken}`;
             this.ws = new WebSocket(wsUrl);
 
             console.log(wsUrl);
@@ -85,20 +87,24 @@ class GameManager {
                         break;
 
                     case 'game_started':
+                        this.socketStarted = true;
                         console.log('[WS] Получено событие game_started', data.payload);
                         this.player.initializePlayer(data.payload);
                         resolve();
                         break;
                     case 'game_ended':
-                        console.log('[WS] Получено событие game_ended', data.payload);
-                        if (this.player.comparePlayer(data.payload)) {
-                            Swal.fire({
-                                text: 'Игра остановлена администратором',
-                            }).then(() => {
-                                window.location.reload();
-                            });
+                        if(this.socketStarted){
+                            console.log('[WS] Получено событие game_ended', data.payload);
+                            if (this.player.comparePlayer(data.payload)) {
+                                Swal.fire({
+                                    text: 'Игра остановлена администратором',
+                                }).then(() => {
+                                    window.location.reload();
+                                });
+                            }
+                            resolve();
+
                         }
-                        resolve();
                         break;
 
                     default:
@@ -134,7 +140,6 @@ class GameManager {
      * @returns 
      */
     async startNextRound() {
-        //заглушка для сервера - неактуально
         const answer = await this.player.getNextRound();
         //    await  console.log(answer.gameSpecificData.text.fact);
         //    await  console.log(answer.gameSpecificData.text.counter);
@@ -159,11 +164,11 @@ class GameManager {
 
         this.ui.showRound(this.round, question.counter, question.fact);
         this.counterValues = question.counter;
-        if(this.round != 1){
-            await this.ui.waitForKeyPress();
-        }else{
-            await this.ui.delay(2000);
-        }
+        // if(this.round != 1){
+        await this.ui.waitForKeyPress();
+        // }else{
+        // await this.ui.delay(2000);
+        // }
         this.startCounter();
 
         // Ожидаем клик, с таймаутом

@@ -2,11 +2,14 @@ import AdminAuth from "../auth/adminAuth.js";
 import Swal from 'sweetalert2';
 
 class PlayerPool {
-    static BASE_URL = 'https://gameserver2.kemo.ru/api';
-    static WS_URL = 'wss://gameserver2.kemo.ru/ws';
+    // static BASE_URL = 'https://gameserver2.kemo.ru/api';
+    // static WS_URL = 'wss://gameserver2.kemo.ru/ws';    
+    static BASE_URL = 'https://gcf.2gis.ru/api';
+    static WS_URL = 'wss://cf.2gis.ru/ws';
     static gameToken = 'gAmEToKeN1';
     static adminKey = 'Q3z8vKp9N2w5R6s1Xy7L';
     static containerSelector = 'admin_container';
+    static domain = window.location.hostname;
 
 
     constructor() {
@@ -26,7 +29,7 @@ class PlayerPool {
 
         if (!token) {
             console.error('[AUTH] Нет токена администратора');
-            window.location.href = '/auth.html';
+            window.location.href = `https://${PlayerPool.domain}/auth.html`;
             return;
         }
         // ?status=started,pending,completed, stopped_by_admin, abandoned
@@ -99,9 +102,6 @@ class PlayerPool {
 
         // Объединяем массивы: сначала started, потом остальные
         const sortedSessions = [...startedSessions, ...otherSessions];
-
-
-
 
         // console.log('Отсортированные сессии:', sortedSessions);
 

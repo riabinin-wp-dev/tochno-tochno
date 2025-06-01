@@ -5,7 +5,8 @@ import Swal from 'sweetalert2';
  * класс профиля игрока
  */
 class Player {
-    static BASE_URL = 'https://gameserver2.kemo.ru/api';
+    // static BASE_URL = 'https://gameserver2.kemo.ru/api';
+    static BASE_URL = 'https://cf.2gis.ru/api';
 
     constructor(playerToken = null) {
         this.playerToken = playerToken;

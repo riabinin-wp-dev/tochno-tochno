@@ -165,6 +165,10 @@ class UIController {
         setTimeout(() => {
             if (name !== '') {
                 document.querySelector('[data-name]').textContent = name;
+
+                if (name == 'Андрей') {
+                    document.querySelector('h1').classList.add('andrew');
+                }
             }
             const section = document.getElementById(id);
             const next = document.getElementById(idNew);
@@ -174,8 +178,9 @@ class UIController {
             next.classList.add('active')
             setTimeout(() => {
                 this.main.classList.add('active')
+                this.main.classList.remove('scale');
             }, 200);
-        }, 200);
+        }, 300);
     }
     // showSection(id, idNew, name = '') {
     //     // Устанавливаем имя если передано
@@ -224,11 +229,12 @@ class UIController {
         setTimeout(() => {
             textEl.classList.remove('active');
         }, 300);
+        await this.delay(800)
 
 
         //продублируем время для анимаации
-        await this.delay(300)
         this.main.classList.remove('active');
+        this.main.classList.add('scale');
 
         document.getElementById('backtimer').classList.add('blur');
     }
@@ -259,7 +265,10 @@ class UIController {
 
         // Формируем строку цели
         const target = counterArr.map(c => c.alfabet[c.target]).join('');
-        const formattedTarget = target.replace(/([A-Za-zА-Яа-яЁё])/u, ' $1');
+        var formattedTarget = target.replace(/([A-Za-zА-Яа-яЁё])/u, ' $1');
+        //исключения
+        formattedTarget === '150828' ? '150 828' : formattedTarget;
+
         this.roundTarget.innerHTML = `ПОЙМАЙ ${formattedTarget}`;
         this.roundInfo.innerHTML = fact;
 
@@ -289,7 +298,7 @@ class UIController {
                 shadow.classList.add(isLastItem ? 'green' : 'grey');
                 digitContainer.appendChild(shadow);
             }
-            
+
             this.counterContainer.appendChild(digitContainer);
         });
     }
@@ -316,9 +325,7 @@ class UIController {
         this.roundEl.classList.add('right');
         this.roundEl.classList.remove('default');
 
-        setTimeout(() => {
-            this.showSalut();
-        }, 2000);
+        this.showSalut();
         await this.showblick('.victory');
 
         this.hideElement([this.counterContainer, this.roundInfo]);
@@ -346,7 +353,6 @@ class UIController {
         this.roundEl.classList.add('wrong');
         this.roundEl.classList.remove('default');
         await this.showblick('.fail');
-
         this.hideElement([this.counterContainer, this.roundInfo]);
         this.showElement([this.roundResult]);
         this.roundTarget.classList.add('winner');
@@ -371,39 +377,12 @@ class UIController {
      * отображаем салют
      * @returns 
      */
+
     showSalut() {
-        return new Promise((resolve) => {
-            const coinImages = ['Coin.svg', 'Silver.svg', 'Gold.svg'];
-            const count = 100;
-            const container = document.getElementById('coin-fireworks');
-            if (!container) return resolve();
-
-            let done = 0;
-
-            for (let i = 0; i < count; i++) {
-                const img = document.createElement('img');
-                img.src = `./assets/images/salut/${coinImages[Math.floor(Math.random() * coinImages.length)]}`;
-                img.classList.add('coin-piece');
-
-                const startX = Math.random() * window.innerWidth;
-                const delay = Math.random() * 1000;
-
-                img.style.left = `${startX}px`;
-                img.style.top = `-50px`;
-                img.style.animationDelay = `${delay}ms`;
-
-                container.appendChild(img);
-
-                setTimeout(() => {
-                    img.remove();
-                    done++;
-                    if (done === count) resolve();
-                }, 2500 + delay); // задержка + длительность анимации
-            }
-        });
+       
+        playSalut();
+        console.log('play')
     }
-
-
 
     /**
      * смена фона цифр

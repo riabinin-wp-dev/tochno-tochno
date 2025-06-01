@@ -44,6 +44,7 @@
         "IE 10"
     ],
     "dependencies": {
+        "@lottiefiles/dotlottie-web": "^0.44.0",
         "autoprefixer": "^10.4.16",
         "glob": "^11.0.0",
         "gulp-imagemin": "^9.1.0",
@@ -55,6 +56,7 @@
         "imagemin-optipng": "^8.0.0",
         "imagemin-svgo": "^11.0.1",
         "just-validate": "^4.3.0",
+        "lottie-web": "^5.13.0",
         "punycode": "^2.3.1",
         "sharp": "^0.33.5",
         "sweetalert2": "^11.21.0",

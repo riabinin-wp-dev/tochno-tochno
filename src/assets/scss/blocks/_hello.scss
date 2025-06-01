@@ -1,9 +1,27 @@
 @use 'blocks/vars' as *;
 
 
-.hello{
+.hello {
     max-height: 100vh;
+
+    & h1.andrew {
+        position: relative;
+
+        &::after {
+            content: '';
+            width: calc(40 / $mobilever * 1vw);
+            height: calc(40 / $mobilever * 1vw);
+            position: absolute;
+            background-image: url('../images/andrew.png');
+            background-size: contain;
+            background-position: center;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+    }
 }
+
 .vertical .hello {
 
     background-size: cover;
@@ -26,9 +44,23 @@
         color: #141414;
         margin-bottom: calc(36 / $mobilever * 1vw);
 
+        &::after {
+            content: '';
+            width: calc(140 / $mobilever * 1vw);
+            height: calc(140 / $mobilever * 1vw);
+            position: absolute;
+            background-image: url('./../../images/andrew.png');
+            background-size: contain;
+            background-position: center;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
         & span {
             color: #1ba136;
         }
+
     }
 
     & p {
@@ -41,23 +73,25 @@
         color: #141414;
         margin-bottom: calc(20/ $mobilever * 1vw);
 
-        & span{
+        & span {
             color: #1ba136;
         }
 
-        &.warning{
+        &.warning {
             color: #f5373c;
         }
     }
 
-    & .flex-column{
+    & .flex-column {
         margin-bottom: calc(40 / $mobilever * 1vw);
     }
-    & .start_bottom  img{
+
+    & .start_bottom img {
         width: calc(512 / $mobilever * 1vw);
         height: calc(364 / $mobilever * 1vw);
     }
-    & .start_bottom{
+
+    & .start_bottom {
         // margin-top: calc(257 / $mobilever * 1vw);
         display: flex;
         justify-content: center;
@@ -102,23 +136,25 @@
         color: #141414;
         margin-bottom: calc(20/ $mobilehor * 1vh);
 
-        & span{
+        & span {
             color: #1ba136;
         }
 
-        &.warning{
+        &.warning {
             color: #f5373c;
         }
     }
 
-    & .flex-column{
+    & .flex-column {
         margin-bottom: calc(40 / $mobilehor * 1vh);
     }
-    & .start_bottom  img{
+
+    & .start_bottom img {
         width: calc(512 / $mobilehor * 1vh);
         height: calc(364 / $mobilehor * 1vh);
     }
-    & .start_bottom{
+
+    & .start_bottom {
         margin-top: auto;
         display: flex;
         justify-content: center;

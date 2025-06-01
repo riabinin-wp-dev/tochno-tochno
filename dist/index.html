@@ -46,7 +46,7 @@
             <section id="hello" class="section hello none default">
                 <div class="flex-column">
                     <div class="container">
-                        <h1 class="h-reset">Привет, <br><span data-name>Максим</span>!</h1>
+                        <h1 class="h-reset">Привет, <br><span data-name></span>!</h1>
                         <p>Давай узнаем, у кого самый точный глаз и быстрая рука</p>
                         <p>Мы покажем тебе метрики 2ГИС. Твоя задача — остановить таймер с этим числом, нажав на кнопку</p>
                         <p>У тебя <span>3 раунда</span> по <span>20 секунд.</span></p>
@@ -93,7 +93,7 @@
                 <div class="round_container z-index">
                 </div>
                 <div class="round_coin_info z-index">
-                    <span>300</span>
+                    <span></span>
                     <img src="./assets/images/svg/Coin.svg" alt="coin">
                 </div>
                 <div class="round_reult_text z-index">
@@ -109,12 +109,44 @@
                         <img src="./assets/images/code.png" alt="shortcode">
                     </div>
                     <div class="flex-column">
-                        <p>Телеграм-бот <br> от 2ГИС</p>
-                        <p>Твой баланс <br> гискоинов ТУТ</p>
+                        <p>Узнай свои <br> гуськоины в нашем телеграм-боте</p>
+                        <!-- <p>Твой баланс <br> гискоинов ТУТ</p> -->
                     </div>
                 </div>
                 <div id="coin-fireworks"></div>
             </section>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js"></script>
+            <script>
+                var animrrSalut;
+                function prepareSalut() {
+                    let salutAnimation = document.createElement("div");
+            
+                    salutAnimation.style.width = "50vh";
+                    salutAnimation.style.height = "100vh";
+                    salutAnimation.style.position = "absolute";
+                    salutAnimation.style.top = "0";
+                    salutAnimation.style.left = "calc(50vw - 25vh)";
+                    salutAnimation.style.zIndex = "1000";
+            
+                    salutAnimation.id = "salut-animation";
+                    document.body.appendChild(salutAnimation);
+                    animrrSalut = lottie.loadAnimation({
+                        container: document.getElementById('salut-animation'),
+                        renderer: 'svg',
+                        loop: false,
+                        autoplay: false,
+                        path: "./assets/js/salut.json",
+                        rendererSettings: {
+                            preserveAspectRatio: 'xMidYMid slice'
+                        }
+                    });
+                }
+                function playSalut() {
+                    animrrSalut.stop();
+                    animrrSalut.play();
+                }
+                prepareSalut(); 
+            </script>
         </main>
 
     </div>

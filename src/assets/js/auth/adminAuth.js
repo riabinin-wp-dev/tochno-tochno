@@ -1,11 +1,17 @@
 class AdminAuth {
-    constructor() {
-        this.apiUrl = 'https://gameserver2.kemo.ru/api/admin/login-token';
-        this.tokenKey = 'admin_token';
-        this.expireKey = 'admin_token_expires';
-        this.form = document.getElementById('auth_form');
-        this.loginInput = document.getElementById('auth_login');
-        this.passInput = document.getElementById('auth_pass');
+        static domain = window.location.hostname;
+        // static server = 'gameserver2.kemo.ru';
+        static server = 'cf.2gis.ru';
+        
+        
+        constructor() {
+            this.apiUrl = `https://${AdminAuth.server}/api/admin/login-token`;
+            this.tokenKey = 'admin_token';
+            this.expireKey = 'admin_token_expires';
+            this.form = document.getElementById('auth_form');
+            this.loginInput = document.getElementById('auth_login');
+            this.passInput = document.getElementById('auth_pass');
+            console.log(AdminAuth.domain)
 
         if (!this.form) {
             console.info('[AUTH] Не на странице авторизации. Форма отсутствует.');
@@ -49,7 +55,7 @@ class AdminAuth {
                 localStorage.setItem(this.expireKey, expires);
 
                 console.log('[AUTH] Авторизация успешна. Токен сохранён');
-                window.location.href = '/admin.html'; // или нужная страница
+                window.location.href = `https://${AdminAuth.domain}/admin.html`; // или нужная страница
             } else {
                 alert(result.data.message || 'Ошибка авторизации');
             }
@@ -63,7 +69,7 @@ class AdminAuth {
     static logout() {
         localStorage.removeItem('admin_token');
         localStorage.removeItem('admin_token_expires');
-        window.location.href = '/auth.html';
+        window.location.href = `https://${AdminAuth.domain}/auth.html`;
     }
 
     static isAuthenticated() {

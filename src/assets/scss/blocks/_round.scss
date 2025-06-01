@@ -224,8 +224,8 @@
         & img {
             // border: calc(8 / $mobilever * 1vw) solid #fff;
             border-radius: calc(12 / $mobilever * 1vw);
-            width: calc(148 / $mobilever * 1vw);
-            height: calc(148 / $mobilever * 1vw);
+            width: calc(190 / $mobilever * 1vw);
+            height: calc(190 / $mobilever * 1vw);
             object-position: center;
             object-fit: contain;
         }
@@ -410,8 +410,8 @@
         & img {
             // border: calc(8 / $mobilehor * 1vh) solid #fff;
             border-radius: calc(12 / $mobilehor * 1vh);
-            width: calc(148 / $mobilehor * 1vh);
-            height: calc(148 / $mobilehor * 1vh);
+            width: 20.704vh;
+            height: 13.704vh;
             object-position: center;
             object-fit: contain;
         }
@@ -440,6 +440,7 @@
 
 .round.blur {
     transition: all 0.1s linear;
+
     &>* {
         opacity: 0;
         transition: all 0.1s linear;

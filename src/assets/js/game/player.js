@@ -59,8 +59,13 @@ class Player {
      * @returns 
      */
     getName() {
-        const arr = this.name.split(" ")
-        return arr[0];
+        if(this.name){
+            const arr = this.name.split(" ")
+            return arr[0];
+        }else{
+            console.log('Имя не удалось обработать')
+            
+        }
     }
 
     /**
@@ -84,19 +89,20 @@ class Player {
     * }|null>}
     */
     async sendResultToServer(success, roundNumber) {
-        const token = AdminAuth.getToken();
+        // const token = AdminAuth.getToken();
 
-        if (!token) {
-            console.error('[AUTH] Нет токена администратора');
-            window.location.href = '/auth.html';
-            return;
-        }
+        // if (!token) {
+        //     console.error('[AUTH] Нет токена администратора');
+        //     window.location.href = '/auth.html';
+        //     return;
+        // }
 
-        const url = `https://gameserver2.kemo.ru/api/games/${Player.gameToken}/session/${this.sessionToken}/submit`;
+        // const url = `https://gameserver2.kemo.ru/api/games/${Player.gameToken}/session/${this.sessionToken}/submit`;
+        const url = `https://cf.2gis.ru/api/games/${Player.gameToken}/session/${this.sessionToken}/submit`;
 
         console.log(`[API] Отправка результата раунда ${roundNumber}:`, {
             success,
-            'Authorization': `Bearer ${token}`,
+            // 'Authorization': `Bearer ${token}`,
             // gameToken: Player.gameToken,
             sessionToken: this.sessionToken
         });
@@ -154,7 +160,8 @@ class Player {
      * @returns 
      */
       async getNextRound() {
-        const url = `https://gameserver2.kemo.ru/api/games/${Player.gameToken}/session/${this.sessionToken}/next`;
+        // const url = `https://gameserver2.kemo.ru/api/games/${Player.gameToken}/session/${this.sessionToken}/next`;
+        const url = `https://cf.2gis.ru/api/games/${Player.gameToken}/session/${this.sessionToken}/next`;
         
         console.log(`[API] Запрос следующего раунда для сессии ${this.sessionToken}`);
     
